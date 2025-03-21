@@ -8,10 +8,11 @@ export default function PartnerLogos() {
     { id: 4, name: "Partner 4", logo: "/partners/partner4.png" },
     { id: 5, name: "Partner 5", logo: "/partners/partner5.png" },
     { id: 6, name: "Partner 6", logo: "/partners/partner6.png" },
+    { id: 7, name: "Partner 7", logo: "/partners/partner7.png" },
   ]
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-7">
       {partners.map((partner) => (
         <div key={partner.id} className="bg-white p-4 rounded-lg shadow-sm flex items-center justify-center">
           <Image
@@ -19,7 +20,7 @@ export default function PartnerLogos() {
             alt={partner.name}
             width={120}
             height={60}
-            className="h-12 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
+            className="h-12 w-auto object-contain grayscale"
           />
         </div>
       ))}

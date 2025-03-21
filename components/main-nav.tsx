@@ -22,16 +22,16 @@ export default function MainNav({ onLoginClick }: MainNavProps) {
           <Link href="/why-us" className="text-teal-700 hover:text-teal-600">
             LÝ DO LỰA CHỌN 360HOME
           </Link>
-          <Link href="/design-trends" className="text-teal-700 hover:text-teal-600">
+          <Link href="https://360home.vn/xu-huong-thiet-ke-noi-that/" className="text-teal-700 hover:text-teal-600">
             XU HƯỚNG THIẾT KẾ NỘI THẤT
           </Link>
-          <Link href="/projects" className="text-teal-700 hover:text-teal-600">
+          <Link href="https://360home.vn/du-an/" className="text-teal-700 hover:text-teal-600">
             DỰ ÁN
           </Link>
-          <Link href="/news" className="text-teal-700 hover:text-teal-600">
+          <Link href="https://360home.vn/tin-tuc" className="text-teal-700 hover:text-teal-600">
             TIN TỨC
           </Link>
-          <Link href="/for-architects" className="text-teal-700 hover:text-teal-600">
+          <Link href="https://360home.vn/danh-cho-kts/" className="text-teal-700 hover:text-teal-600">
             DÀNH CHO KTS
           </Link>
         </div>

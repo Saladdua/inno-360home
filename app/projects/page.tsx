@@ -53,30 +53,6 @@ export default function ProjectsPage() {
       logo: "/hoang-huy-logo.png",
       description: "Thiết kế không gian thương mại tại HOANG HUY COMMERCE",
     },
-    {
-      id: 6,
-      title: "VINHOMES OCEAN PARK",
-      category: "apartment",
-      image: "/project6.jpg",
-      logo: "/vinhomes-logo.png",
-      description: "Thiết kế nội thất căn hộ tại VINHOMES OCEAN PARK",
-    },
-    {
-      id: 7,
-      title: "SUNSHINE CENTER",
-      category: "office",
-      image: "/project7.jpg",
-      logo: "/sunshine-logo.png",
-      description: "Thiết kế văn phòng làm việc hiện đại tại SUNSHINE CENTER",
-    },
-    {
-      id: 8,
-      title: "ECOPARK GRAND",
-      category: "villa",
-      image: "/project8.jpg",
-      logo: "/ecopark-logo.png",
-      description: "Thiết kế và thi công biệt thự tại ECOPARK GRAND",
-    },
   ]
 
   const filteredProjects =
@@ -120,22 +96,6 @@ export default function ProjectsPage() {
               Căn hộ
             </button>
             <button
-              onClick={() => setActiveFilter("villa")}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
-                activeFilter === "villa" ? "bg-teal-700 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              Biệt thự
-            </button>
-            <button
-              onClick={() => setActiveFilter("office")}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
-                activeFilter === "office" ? "bg-teal-700 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              Văn phòng
-            </button>
-            <button
               onClick={() => setActiveFilter("commercial")}
               className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
                 activeFilter === "commercial" ? "bg-teal-700 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -173,8 +133,6 @@ export default function ProjectsPage() {
                     <div className="mt-4">
                       <span className="inline-block bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">
                         {project.category === "apartment" && "Căn hộ"}
-                        {project.category === "villa" && "Biệt thự"}
-                        {project.category === "office" && "Văn phòng"}
                         {project.category === "commercial" && "Thương mại"}
                       </span>
                     </div>

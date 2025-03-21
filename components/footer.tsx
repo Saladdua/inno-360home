@@ -14,17 +14,8 @@ export default function Footer() {
               Nền tảng kết nối hoàn thiện nội thất toàn diện, giải pháp hoàn hảo cho ngôi nhà của bạn.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://www.facebook.com/360homevn8686" className="text-gray-400 hover:text-white transition-colors">
                 <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Youtube className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Twitter className="h-5 w-5" />
               </a>
             </div>
           </div>
@@ -49,7 +40,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/news" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/https://360home.vn/tin-tuc" className="text-gray-400 hover:text-white transition-colors">
                   Tin tức
                 </Link>
               </li>
@@ -94,15 +85,15 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex">
                 <MapPin className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-400">123 Đường ABC, Quận XYZ, Hà Nội</span>
+                <span className="text-gray-400">Số 39 đường Thượng Thụy, phường Phú Thượng, quận Tây Hồ, Hà Nội</span>
               </li>
               <li className="flex">
                 <Phone className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-400">+84 123 456 789</span>
+                <span className="text-gray-400">(+84) 88 6666 360</span>
               </li>
               <li className="flex">
                 <Mail className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-400">info@360home.vn</span>
+                <span className="text-gray-400">contact@360home.vn</span>
               </li>
             </ul>
           </div>

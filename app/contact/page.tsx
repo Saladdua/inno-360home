@@ -8,8 +8,12 @@ import { Mail, Phone, MapPin, Clock, Send, MessageSquare } from "lucide-react"
 import MainNav from "@/components/main-nav"
 import Footer from "@/components/footer"
 import LoginModal from "@/components/login-modal"
+import { MapContainer, TileLayer, Marker, Popup, MapContainerProps } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 
 export default function ContactPage() {
+  const position: [number, number] = [21.088348865921386, 105.79562298335514]; // Replace with your actual coordinates
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
@@ -23,6 +27,16 @@ export default function ContactPage() {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
+
+  const customIcon = L.icon({
+    iconUrl: "/marker-icon.png", // Correct path (relative to `public/`)
+    iconSize: [30, 40],       // Width, height of the icon
+    iconAnchor: [15, 40],     // Point where the marker "pins" to the map
+    popupAnchor: [0, -40],     // Position popup correctly
+    shadowUrl: "/marker-icon.png", // Provide the missing shadow
+    shadowSize: [40, 40]
+  });
+  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -69,7 +83,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold mb-2">Địa chỉ</h3>
-                    <p className="text-gray-600">123 Đường ABC, Quận XYZ, Hà Nội</p>
+                    <p className="text-gray-600">Số 39 Thượng Thụy, Phú Thượng, Tây Hồ, Hà Nội</p>
                   </div>
                 </div>
 
@@ -79,7 +93,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold mb-2">Điện thoại</h3>
-                    <p className="text-gray-600">+84 123 456 789</p>
+                    <p className="text-gray-600">(+84) 88 6666 360</p>
                   </div>
                 </div>
 
@@ -89,18 +103,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold mb-2">Email</h3>
-                    <p className="text-gray-600">info@360home.vn</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start">
-                  <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <Clock className="h-6 w-6 text-teal-700" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2">Giờ làm việc</h3>
-                    <p className="text-gray-600">Thứ Hai - Thứ Sáu: 8:00 - 17:30</p>
-                    <p className="text-gray-600">Thứ Bảy: 8:00 - 12:00</p>
+                    <p className="text-gray-600">contact@360home.com</p>
                   </div>
                 </div>
               </div>
@@ -108,7 +111,19 @@ export default function ContactPage() {
               <div className="mt-8">
                 <h3 className="text-xl font-semibold mb-4">Bản đồ</h3>
                 <div className="h-[300px] bg-gray-200 rounded-lg relative overflow-hidden">
-                  <Image src="/map-placeholder.jpg" alt="Location Map" fill className="object-cover" />
+                  <MapContainer 
+                    center={position as MapContainerProps['center']}
+                    zoom={15} 
+                    scrollWheelZoom={false}
+                    className="h-full w-full rounded-lg"
+                  >
+                    <TileLayer
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <Marker position={position}>
+                      <Popup>Địa chỉ của bạn tại đây!</Popup>
+                    </Marker>
+                  </MapContainer>
                 </div>
               </div>
             </div>
@@ -229,4 +244,3 @@ export default function ContactPage() {
     </main>
   )
 }
-
