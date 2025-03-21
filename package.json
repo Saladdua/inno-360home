@@ -66,5 +66,21 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
-  }
+  },
+  "description": "[INNO] Website 360home.vn",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Saladdua/inno-360home.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Saladdua/inno-360home/issues"
+  },
+  "homepage": "https://github.com/Saladdua/inno-360home#readme"
 }

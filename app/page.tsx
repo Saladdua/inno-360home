@@ -23,6 +23,7 @@ export default function Home() {
       title: "LUMI HANOI",
       image: "/project1.jpg",
       imageAlt: "LUMI HANOI Project",
+      images: [] as string[],
     },
     {
       id: 2,
@@ -31,6 +32,7 @@ export default function Home() {
       title: "DIAMOND CROWN HẢI PHÒNG - DOJILAND",
       image: "/project2.jpg",
       imageAlt: "DIAMOND CROWN Project",
+      images: [] as string[],
     },
     {
       id: 3,
@@ -39,6 +41,7 @@ export default function Home() {
       title: "HERITAGE WEST LAKE",
       image: "/project3.jpg",
       imageAlt: "HERITAGE Project",
+      images: [] as string[],
     },
     {
       id: 4,
@@ -47,6 +50,7 @@ export default function Home() {
       title: "THE MINATO RESIDENT",
       image: "/project4.jpg",
       imageAlt: "THE MINATO RESIDENT Project",
+      images: [] as string[],
     },
     {
       id: 5,
@@ -55,6 +59,7 @@ export default function Home() {
       title: "HOANG HUY COMMERCE",
       image: "/project5.jpg",
       imageAlt: "HOANG HUY COMMERCE Project",
+      images: [] as string[],
     },
   ]
 
@@ -67,17 +72,29 @@ export default function Home() {
   const [currentImages, setCurrentImages] = useState(projects.map(() => 0))
 
   // Function to rotate images for a specific project
-  const rotateImage = useCallback((projectIndex, imageIndex = null) => {
+  interface Project {
+    id: number;
+    logo: string;
+    logoAlt: string;
+    title: string;
+    image: string;
+    imageAlt: string;
+    images: string[];
+  }
+
+  type RotateImage = (projectIndex: number, imageIndex?: number | null) => void;
+
+  const rotateImage: RotateImage = useCallback((projectIndex, imageIndex = null) => {
     setCurrentImages((prev) => {
-      const newState = [...prev]
+      const newState = [...prev];
       if (imageIndex !== null) {
-        newState[projectIndex] = imageIndex
+        newState[projectIndex] = imageIndex;
       } else {
-        newState[projectIndex] = (newState[projectIndex] + 1) % 3
+        newState[projectIndex] = (newState[projectIndex] + 1) % 3;
       }
-      return newState
-    })
-  }, [])
+      return newState;
+    });
+  }, []);
 
   const totalSlides = Math.ceil(projects.length / 3)
 
