@@ -8,7 +8,6 @@ import MainNav from "@/components/main-nav"
 import Footer from "@/components/footer"
 import LoginModal from "@/components/login-modal"
 import ServiceCard from "@/components/service-card"
-import TestimonialCard from "@/components/testimonial-card"
 import DesignProcess from "@/components/design-process"
 import PartnerLogos from "@/components/partner-logos"
 import { icon } from "leaflet"
@@ -31,7 +30,7 @@ export default function Home() {
       id: 2,
       logo: "/diamond-logo.png",
       logoAlt: "DIAMOND CROWN",
-      title: "DIAMOND CROWN HẢI PHÒNG - DOJILAND",
+      title: "DIAMOND CROWN HẢI PHÒNG",
       image: "/project2.jpg",
       imageAlt: "DIAMOND CROWN Project",
       images: [] as string[],
@@ -72,6 +71,23 @@ export default function Home() {
 
   // State to track current image for each project
   const [currentImages, setCurrentImages] = useState(projects.map(() => 0))
+
+  const [copySuccess, setCopySuccess] = useState<string | null>(null);
+
+  // Function to copy text and show notification
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text)
+        .then(() => {
+            setCopySuccess("Copied to clipboard!");
+            setTimeout(() => setCopySuccess(null), 2000);
+        })
+        .catch((err) => {
+            console.error("Failed to copy: ", err);
+            setCopySuccess("Failed to copy!");
+            setTimeout(() => setCopySuccess(null), 2000);
+        });
+};
+
 
   // Function to rotate images for a specific project
   interface Project {
@@ -151,6 +167,7 @@ export default function Home() {
       image: "/services/news1.png",
       date: "12/02/2025",
       icon: "/logo.png",
+      link: "https://360home.vn/360home-giai-phap-thong-minh-va-toan-dien-cho-thiet-ke-noi-that/",
     },
     {
       id: 2,
@@ -159,6 +176,7 @@ export default function Home() {
       image: "/services/news2.jpg",
       date: "12/03/2025",
       icon: "/logo.png",
+      link: "https://360home.vn/cap-nhat-tien-do-du-an-lumi-capitaland-ha-noi/",
     },
     {
       id: 3,
@@ -167,6 +185,7 @@ export default function Home() {
       image: "/services/news3.png",
       date: "22/01/2025",
       icon: "/logo.png",
+      link: "https://360home.vn/cac-xu-huong-trang-tri-noi-that-thinh-hanh-nam-2025/",
     },
     {
       id: 4,
@@ -175,42 +194,37 @@ export default function Home() {
       image: "/services/news4.jpg",
       date: "03/03/2025",
       icon: "/logo.png",
+      link: "https://360home.vn/dam-minh-trong-khong-gian-thien-nhien-xanh-giua-long-do-thi/",
     },
-  ]
+  ];
 
-  const testimonials = [
-    {
-      id: 1,
-      name: "Nguyễn Văn A",
-      position: "Chủ căn hộ tại LUMI HANOI",
-      content:
-        "Tôi rất hài lòng với dịch vụ thiết kế và thi công của 360HOME. Đội ngũ kiến trúc sư rất chuyên nghiệp và tận tâm, luôn lắng nghe ý kiến của tôi và đưa ra những giải pháp tối ưu.",
-      avatar: "/testimonials/avatar1.jpg",
-    },
-    {
-      id: 2,
-      name: "Trần Thị B",
-      position: "Chủ căn hộ tại HERITAGE WEST LAKE",
-      content:
-        "360HOME đã giúp tôi hoàn thiện căn hộ của mình một cách hoàn hảo. Từ thiết kế đến thi công đều rất chuyên nghiệp và đúng tiến độ. Tôi sẽ giới thiệu 360HOME cho bạn bè và người thân.",
-      avatar: "/testimonials/avatar2.jpg",
-    },
-    {
-      id: 3,
-      name: "Lê Văn C",
-      position: "Chủ căn hộ tại DIAMOND CROWN",
-      content:
-        "Đội ngũ 360HOME rất tận tâm và chuyên nghiệp. Họ luôn lắng nghe ý kiến của tôi và đưa ra những giải pháp phù hợp với nhu cầu và ngân sách của tôi.",
-      avatar: "/testimonials/avatar3.jpg",
-    },
-  ]
+  // Rendering the "Tìm hiểu thêm" button
+  services.map((services) => (
+    <div key={services.id}>
+      <h3>{services.title}</h3>
+      <p>{services.description}</p>
+      <a href={services.link} target="_blank" rel="noopener noreferrer">
+        Tìm hiểu thêm →
+      </a>
+    </div>
+  ));
 
   return (
     <main className="min-h-screen">
       <MainNav onLoginClick={() => setShowLoginModal(true)} />
-
       {/* Hero Section */}
       <section className="relative h-[600px]">
+
+        {/*Floating Banners*/}
+        <div className="floating-banners">
+          <div className="banner left-banner">
+           <img src="/left-banner.jpg" alt="Left Banner" />
+          </div>
+          <div className="banner right-banner">
+            <img src="/right-banner.jpg" alt="Right Banner" />
+          </div>
+        </div>
+
         <div className="absolute inset-0">
           {heroImages.map((img, index) => (
             <div
@@ -475,24 +489,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Khách hàng nói gì về chúng tôi</h2>
-            <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-              Sự hài lòng của khách hàng là thành công lớn nhất của chúng tôi
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial) => (
-              <TestimonialCard key={testimonial.id} testimonial={testimonial} />
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Partners Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
@@ -525,16 +521,35 @@ export default function Home() {
 
       {/* Floating Contact Buttons */}
       <div className="fixed right-4 bottom-4 flex flex-col space-y-3 z-50">
-        <button className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors">
-          <Mail className="h-6 w-6" />
-        </button>
-        <button className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors">
-          <MessageSquare className="h-6 w-6" />
-        </button>
-        <button className="bg-red-500 text-white p-3 rounded-full shadow-lg hover:bg-red-600 transition-colors">
-          <Phone className="h-6 w-6" />
-        </button>
-      </div>
+      {/* Floating Notification */}
+      {copySuccess && (
+        <div className="absolute right-14 bottom-12 bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg transition-opacity duration-300">
+          {copySuccess}
+        </div>
+      )}
+
+      {/* Buttons */}
+      <button
+        onClick={() => handleCopy("contact@360home.vn")}
+        className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
+      >
+        <Mail className="h-6 w-6" />
+      </button>
+
+      <button
+        onClick={() => window.open("https://zalo.me/4438617373561395664", "_blank")}
+        className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
+      >
+        <MessageSquare className="h-6 w-6" />
+      </button>
+
+      <button
+        onClick={() => handleCopy("(+84) 88 6666 360")}
+        className="bg-red-500 text-white p-3 rounded-full shadow-lg hover:bg-red-600 transition-colors"
+      >
+        <Phone className="h-6 w-6" />
+      </button>
+    </div>
 
       {/* Login Modal */}
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}

@@ -9,6 +9,7 @@ interface ServiceProps {
     description: string
     icon: string
     image: string
+    link: string
   }
 }
 
@@ -41,7 +42,7 @@ export default function ServiceCard({ service }: ServiceProps) {
       </div>
       <div className="p-6">
         <Link
-          href={`/services/${service.id}`}
+          href={service.link}
           className="inline-flex items-center text-teal-700 font-medium hover:text-teal-600 transition-colors"
         >
           Tìm hiểu thêm
