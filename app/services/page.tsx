@@ -26,6 +26,7 @@ export default function ServicesPage() {
         "Thiết kế văn phòng",
         "Thiết kế không gian thương mại",
       ],
+      link: "https://360home.vn/360home-giai-phap-thong-minh-va-toan-dien-cho-thiet-ke-noi-that/"
     },
     {
       id: 2,
@@ -128,12 +129,15 @@ export default function ServicesPage() {
                   ))}
                 </ul>
                 <Link
-                  href={`/services/${service.id}`}
+                  href={service.link ? service.link : `/services/${service.id}`}
+                  target={service.link?.startsWith("http") ? "_blank" : "_self"}
+                  rel={service.link?.startsWith("http") ? "noopener noreferrer" : undefined}
                   className="inline-flex items-center text-teal-700 font-medium hover:text-teal-600 transition-colors"
                 >
                   Tìm hiểu thêm
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
+
               </div>
             </div>
           ))}

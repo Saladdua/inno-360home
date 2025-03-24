@@ -11,6 +11,8 @@ import ServiceCard from "@/components/service-card"
 import TestimonialCard from "@/components/testimonial-card"
 import DesignProcess from "@/components/design-process"
 import PartnerLogos from "@/components/partner-logos"
+import { icon } from "leaflet"
+import { link } from "fs"
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -120,16 +122,16 @@ export default function Home() {
   // Auto-rotate images
   useEffect(() => {
     const intervals = projects.map((_, index) => {
-      return setInterval(
-        () => {
-          rotateImage(index)
-        },
-        3000 + index * 500,
-      ) // Stagger the transitions
-    })
-
-    return () => intervals.forEach((interval) => clearInterval(interval))
-  }, [rotateImage, projects])
+      return setInterval(() => {
+        rotateImage(index);
+      }, 3000 + index * 500); // Stagger transitions
+    });
+  
+    return () => {
+      intervals.forEach(clearInterval); // Cleanup previous intervals
+    };
+  }, [projects, rotateImage]); // Ensure it updates properly
+  
 
   // Add this with the other useEffect hooks
   useEffect(() => {
@@ -143,32 +145,36 @@ export default function Home() {
   const services = [
     {
       id: 1,
-      title: "Thiết kế nội thất",
+      title: "360HOME - Giải pháp thông minh và toàn diện cho thiết kế nội thất",
       description:
-        "Đội ngũ kiến trúc sư chuyên nghiệp với nhiều năm kinh nghiệm sẽ mang đến những giải pháp thiết kế tối ưu.",
-      icon: "/icons/design-icon.png",
-      image: "/services/interior-design.jpg",
+        "360Home cung cấp các thiết kế chuyên nghiệp hoàn toàn miễn phí kèm theo báo giá chi tiết dịch vụ nội thất trọn gói của mình cho khách tất cả khách hàng. Trước bối cảnh chính sách nhà nước phê duyệt chiến lược phát triển ngành xây dựng đến",
+      image: "/services/news1.png",
+      date: "12/02/2025",
+      icon: "/logo.png",
     },
     {
       id: 2,
-      title: "Thi công nội thất",
-      description: "Đảm bảo chất lượng thi công với đội ngũ thợ lành nghề và quy trình giám sát chặt chẽ.",
-      icon: "/icons/construction-icon.png",
-      image: "/services/construction.jpg",
+      title: "Cập nhật tiến độ dự án LUMI CAPITALAND Hanoi",
+      description: "Mặc dù điều kiện thời tiết tại Hà Nội trong tháng vừa qua không được thuận lợi, dự án Lumi Hanoi vẫn đảm bảo tiến độ xây dựng được diễn ra theo kế hoạch và đạt được những cột mốc quan trọng.",
+      image: "/services/news2.jpg",
+      date: "12/03/2025",
+      icon: "/logo.png",
     },
     {
       id: 3,
-      title: "Cung cấp nội thất",
-      description: "Cung cấp đa dạng sản phẩm nội thất cao cấp từ các thương hiệu uy tín trong và ngoài nước.",
-      icon: "/icons/furniture-icon.png",
-      image: "/services/furniture.jpg",
+      title: "Các xu hướng trang trí nội thất thịnh hành năm 2025",
+      description: "Bỏ qua tone màu trung tính, các không gian sống đa dạng màu sắc, có góc sáng tạo tại nhà… sẽ được ưa chuộng nhiều hơn trong năm mới.",
+      image: "/services/news3.png",
+      date: "22/01/2025",
+      icon: "/logo.png",
     },
     {
       id: 4,
-      title: "Tư vấn giải pháp",
-      description: "Tư vấn các giải pháp tối ưu cho không gian sống và làm việc của bạn.",
-      icon: "/icons/consulting-icon.png",
-      image: "/services/consulting.jpg",
+      title: "Đắm mình trong không gian “thiên nhiên xanh” giữa lòng đô thị",
+      description: "Khu vườn treo phủ kín mặt tiền giúp tạo bóng mát, điều hòa nhiệt độ công trình và góp thêm mảng xanh cho đô thị.",
+      image: "/services/news4.jpg",
+      date: "03/03/2025",
+      icon: "/logo.png",
     },
   ]
 
@@ -274,7 +280,7 @@ export default function Home() {
           <div className="relative overflow-hidden">
             <div
               className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentSlide * (100 / projects.length) * 3}%)` }}
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
               {projects.map((project, projectIndex) => (
                 <div key={project.id} className="w-full md:w-1/3 flex-shrink-0 px-3">
@@ -352,62 +358,79 @@ export default function Home() {
       </p>
     </div>
 
-    {/* ✅ 5 columns layout */}
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
-      {[
-        { 
-          title: "CHỦ NHÀ", 
-          image: "/images/homeowner.png",
-          description: [
-            "Thoả sức xem thiết kế căn hộ tương lai của mình.", 
-            "Tặng thiết kế miễn phí."
-          ] 
-        },
-        { 
-          title: "CHỦ ĐẦU TƯ DỰ ÁN", 
-          image: "/images/investor.png",
-          description: [
-            "Làm phong phú bộ tài liệu bán hàng.", 
-            "Đồng hành cùng CĐT trong quảng bá sản phẩm."
-          ] 
-        },
-        { 
-          title: "ĐƠN VỊ CUNG ỨNG", 
-          image: "/images/supplier.png",
-          description: [
-            "Thúc đẩy bán hàng tốt hơn.", 
-            "Tham gia vào chợ thương mại điện tử 360Market."
-          ] 
-        },
-        { 
-          title: "NHÀ THẦU THI CÔNG", 
-          image: "/images/contractor.png",
-          description: [
-            "Kết nối với chủ nhà để cung cấp dịch vụ thi công.", 
-            "Tiết kiệm chi phí do thi công trọng điểm."
-          ] 
-        },
-        { 
-          title: "TƯ VẤN THIẾT KẾ", 
-          image: "/images/designer.png",
-          description: [
-            "Truy cập thư viện thiết kế miễn phí.", 
-            "Hưởng chính sách mua nội thất dành riêng cho kiến trúc sư."
-          ] 
-        },
-      ].map((item, index) => (
-        <div key={index} className="bg-white p-6 rounded-lg shadow-md text-center">
-          {/* ✅ Different image for each column */}
-          <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <img src={item.image} alt={item.title} className="h-8 w-8" />
-          </div>
-          <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-          {item.description.map((text, idx) => (
-            <p key={idx} className="text-gray-600">• {text}</p>
-          ))}
+    <div className="flex flex-col items-center w-full">
+  {/* ✅ Grid with 5 columns */}
+  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+    {[
+      { 
+        title: "CHỦ NHÀ", 
+        image: "/why-choose-1.png",
+        description: [
+          "Thoả sức xem thiết kế căn hộ tương lai của mình.", 
+          "Tặng thiết kế miễn phí."
+        ] 
+      },
+      { 
+        title: "CHỦ ĐẦU TƯ DỰ ÁN", 
+        image: "/why-choose-2.png",
+        description: [
+          "Làm phong phú bộ tài liệu bán hàng.", 
+          "Đồng hành cùng CĐT trong quảng bá sản phẩm."
+        ] 
+      },
+      { 
+        title: "ĐƠN VỊ CUNG ỨNG", 
+        image: "/why-choose-3.png",
+        description: [
+          "Thúc đẩy bán hàng tốt hơn.", 
+          "Tham gia vào chợ thương mại điện tử 360Market."
+        ] 
+      },
+      { 
+        title: "NHÀ THẦU THI CÔNG", 
+        image: "/why-choose-4.png",
+        description: [
+          "Kết nối với chủ nhà để cung cấp dịch vụ thi công.", 
+          "Tiết kiệm chi phí do thi công trọng điểm."
+        ] 
+      },
+      { 
+        title: "TƯ VẤN THIẾT KẾ", 
+        image: "/why-choose-5.png",
+        description: [
+          "Truy cập thư viện thiết kế miễn phí.", 
+          "Hưởng chính sách mua nội thất dành riêng cho kiến trúc sư."
+        ] 
+      },
+    ].map((item, index) => (
+      <div key={index} className="bg-white p-6 rounded-lg shadow-md text-center min-w-[250px]">
+        {/* ✅ Different image for each column */}
+        <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <img src={item.image} alt={item.title} className="h-8 w-8" />
         </div>
-      ))}
-    </div>
+        <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+        {item.description.map((text, idx) => (
+          <p key={idx} className="text-gray-600">• {text}</p>
+        ))}
+      </div>
+    ))}
+  </div>
+
+  {/* ✅ Centered Clickable Text */}
+  <div className="w-full flex justify-center mt-6">
+    <a 
+          href="https://360home.vn/gioi-thieu/"
+          className="inline-flex items-center text-teal-700 font-medium hover:text-teal-600 transition-colors"
+    >
+      Xem tất cả dự án 
+      <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      </svg>
+    </a>
+  </div>
+</div>
+
+
   </div>
 </section>
 
@@ -416,9 +439,9 @@ export default function Home() {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Dịch vụ của chúng tôi</h2>
+            <h2 className="text-3xl font-bold text-gray-900">TIN TỨC TỪ 360HOME</h2>
             <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-              Cung cấp đầy đủ các dịch vụ thiết kế và thi công nội thất
+              Cùng 360HOME lên ý tưởng cho dự án mới của bạn qua thông tin, tin tức về thiết kế, thầu thi công trong và ngoài nước
             </p>
           </div>
 
@@ -430,10 +453,10 @@ export default function Home() {
 
           <div className="mt-10 text-center">
             <Link
-              href="/services"
+              href="https://360home.vn/tin-tuc/"
               className="inline-flex items-center text-teal-700 font-medium hover:text-teal-600 transition-colors"
             >
-              Xem tất cả dịch vụ
+              Xem thêm tin tức
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </div>

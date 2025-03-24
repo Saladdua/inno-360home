@@ -18,7 +18,7 @@ export default function MainNav({ onLoginClick }: MainNavProps) {
         <Link href="/" className="mr-8">
           <Image src="/logo.png" alt="360HOME Logo" width={120} height={40} className="h-10 w-auto" />
         </Link>
-        <div className="hidden md:flex space-x-6 text-sm font-medium">
+        <div className="hidden md:flex space-x-6 text-sm font-medium ml-auto">
           <Link href="/why-us" className="text-teal-700 hover:text-teal-600">
             LÝ DO LỰA CHỌN 360HOME
           </Link>
