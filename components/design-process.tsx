@@ -4,33 +4,33 @@ export default function DesignProcess() {
   const steps = [
     {
       id: 1,
-      title: "Tư vấn khảo sát",
-      description: "Gặp gỡ, trao đổi và khảo sát hiện trạng để hiểu rõ nhu cầu của khách hàng.",
+      title: "Chọn dự án",
+      description: "• Chọn dự án bạn quan tâm",
     },
     {
       id: 2,
-      title: "Lên ý tưởng thiết kế",
-      description: "Phát triển ý tưởng thiết kế dựa trên yêu cầu và phong cách của khách hàng.",
+      title: "Chọn căn hộ",
+      description: "• Chọn căn hộ bạn muốn xem thiết kế",
     },
     {
       id: 3,
-      title: "Thiết kế sơ bộ",
-      description: "Tạo bản vẽ sơ bộ và phối cảnh 3D để khách hàng có cái nhìn tổng quan.",
+      title: "Xem thiết kế",
+      description: "• Xem và tìm hiểu các phương án thiết kế",
     },
     {
       id: 4,
-      title: "Thiết kế chi tiết",
-      description: "Hoàn thiện bản vẽ kỹ thuật, chi tiết vật liệu và dự toán chi phí.",
+      title: "Chọn phương án",
+      description: "• Lựa chọn các phương án thiết kế bạn thích",
     },
     {
       id: 5,
-      title: "Thi công",
-      description: "Triển khai thi công theo đúng thiết kế đã được phê duyệt.",
+      title: "Tải thiết kế",
+      description: "• Tải thiết kế miễn phí \n• Liên hệ cấp báo giá theo thiết kế \n• Chỉnh sửa thiết kế (nếu bạn muốn)",
     },
     {
       id: 6,
       title: "Nghiệm thu bàn giao",
-      description: "Kiểm tra chất lượng và bàn giao công trình hoàn thiện cho khách hàng.",
+      description: "• Kiểm tra chất lượng và bàn giao công trình hoàn thiện cho khách hàng.",
     },
   ]
 
@@ -47,7 +47,7 @@ export default function DesignProcess() {
                 <span className="text-teal-700 mr-2">{step.id}.</span>
                 {step.title}
               </h3>
-              <p className="text-gray-600">{step.description}</p>
+              <p className="text-gray-600 whitespace-pre-line">{step.description}</p>
             </div>
           </div>
         </div>

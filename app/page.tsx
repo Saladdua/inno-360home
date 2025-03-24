@@ -344,49 +344,73 @@ export default function Home() {
 
       {/* Why Choose Us Section */}
       <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Lý do lựa chọn 360HOME</h2>
-            <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-              Chúng tôi cung cấp giải pháp toàn diện cho không gian sống của bạn
-            </p>
+  <div className="max-w-7xl mx-auto px-4">
+    <div className="text-center mb-12">
+      <h2 className="text-3xl font-bold text-gray-900">Lý do lựa chọn 360HOME</h2>
+      <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+        Chúng tôi cung cấp giải pháp toàn diện cho không gian sống của bạn
+      </p>
+    </div>
+
+    {/* ✅ 5 columns layout */}
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+      {[
+        { 
+          title: "CHỦ NHÀ", 
+          image: "/images/homeowner.png",
+          description: [
+            "Thoả sức xem thiết kế căn hộ tương lai của mình.", 
+            "Tặng thiết kế miễn phí."
+          ] 
+        },
+        { 
+          title: "CHỦ ĐẦU TƯ DỰ ÁN", 
+          image: "/images/investor.png",
+          description: [
+            "Làm phong phú bộ tài liệu bán hàng.", 
+            "Đồng hành cùng CĐT trong quảng bá sản phẩm."
+          ] 
+        },
+        { 
+          title: "ĐƠN VỊ CUNG ỨNG", 
+          image: "/images/supplier.png",
+          description: [
+            "Thúc đẩy bán hàng tốt hơn.", 
+            "Tham gia vào chợ thương mại điện tử 360Market."
+          ] 
+        },
+        { 
+          title: "NHÀ THẦU THI CÔNG", 
+          image: "/images/contractor.png",
+          description: [
+            "Kết nối với chủ nhà để cung cấp dịch vụ thi công.", 
+            "Tiết kiệm chi phí do thi công trọng điểm."
+          ] 
+        },
+        { 
+          title: "TƯ VẤN THIẾT KẾ", 
+          image: "/images/designer.png",
+          description: [
+            "Truy cập thư viện thiết kế miễn phí.", 
+            "Hưởng chính sách mua nội thất dành riêng cho kiến trúc sư."
+          ] 
+        },
+      ].map((item, index) => (
+        <div key={index} className="bg-white p-6 rounded-lg shadow-md text-center">
+          {/* ✅ Different image for each column */}
+          <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <img src={item.image} alt={item.title} className="h-8 w-8" />
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow-md text-center">
-              <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Check className="h-8 w-8 text-teal-700" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Đội ngũ chuyên nghiệp</h3>
-              <p className="text-gray-600">Kiến trúc sư và đội ngũ thi công giàu kinh nghiệm</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md text-center">
-              <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Check className="h-8 w-8 text-teal-700" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Giải pháp toàn diện</h3>
-              <p className="text-gray-600">Từ thiết kế đến thi công và cung cấp nội thất</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md text-center">
-              <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Check className="h-8 w-8 text-teal-700" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Chất lượng cam kết</h3>
-              <p className="text-gray-600">Đảm bảo chất lượng với quy trình giám sát chặt chẽ</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md text-center">
-              <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Check className="h-8 w-8 text-teal-700" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Tiến độ đúng hẹn</h3>
-              <p className="text-gray-600">Cam kết hoàn thành dự án đúng thời hạn</p>
-            </div>
-          </div>
+          <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+          {item.description.map((text, idx) => (
+            <p key={idx} className="text-gray-600">• {text}</p>
+          ))}
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
+
 
       {/* Services Section */}
       <section className="py-16">
@@ -420,7 +444,7 @@ export default function Home() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Quy trình thiết kế</h2>
+            <h2 className="text-3xl font-bold text-gray-900">Quy trình của chúng tôi</h2>
             <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Quy trình làm việc chuyên nghiệp, minh bạch</p>
           </div>
 
