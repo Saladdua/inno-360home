@@ -38,19 +38,32 @@ export default function ContactPage() {
   });
   
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle form submission logic here
-    console.log("Form submitted:", formData)
-    alert("Cảm ơn bạn đã liên hệ với chúng tôi. Chúng tôi sẽ phản hồi trong thời gian sớm nhất!")
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      subject: "",
-      message: "",
-    })
-  }
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = {
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+    };
+
+    const response = await fetch("http://localhost:5000/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      console.log("Form submitted:", formData);
+        alert("Cảm ơn bạn đã liên hệ với chúng tôi. Chúng tôi sẽ phản hồi trong thời gian sớm nhất!");
+    } else {
+        alert("Gửi tin nhắn thất bại!");
+    }
+};
+
 
   return (
     <main className="min-h-screen">
