@@ -1,37 +1,100 @@
 "use client"
 
-import { useEffect } from "react"
+import type React from "react"
+
+import { useState } from "react"
 import Image from "next/image"
-import { X, User, Lock } from "lucide-react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { X, Mail, Lock, Eye, EyeOff } from "lucide-react"
+import { signIn } from "next-auth/react"
 
 interface LoginModalProps {
   onClose: () => void
 }
 
 export default function LoginModal({ onClose }: LoginModalProps) {
-  // Close modal when Escape key is pressed
-  useEffect(() => {
-    const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose()
-      }
-    }
+  const router = useRouter()
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  })
+  const [showPassword, setShowPassword] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
+  // Close modal when Escape key is pressed
+  const handleEsc = (event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      onClose()
+    }
+  }
+
+  // Prevent body scrolling when modal is open
+  useState(() => {
+    document.body.style.overflow = "hidden"
     window.addEventListener("keydown", handleEsc)
 
     return () => {
+      document.body.style.overflow = "auto"
       window.removeEventListener("keydown", handleEsc)
     }
-  }, [onClose])
+  })
 
-  // Prevent body scrolling when modal is open
-  useEffect(() => {
-    document.body.style.overflow = "hidden"
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+    setError("") // Clear error when user types
+  }
 
-    return () => {
-      document.body.style.overflow = "auto"
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
+
+    // Validate form
+    if (!formData.email || !formData.password) {
+      setError("Vui lòng điền đầy đủ thông tin")
+      setLoading(false)
+      return
     }
-  }, [])
+
+    try {
+      // Sign in with NextAuth
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
+      })
+
+      if (result?.error) {
+        throw new Error(result.error)
+      }
+
+      // Close modal and refresh page
+      onClose()
+      router.refresh()
+    } catch (error: any) {
+      console.error("Login error:", error)
+      setError(error.message || "Email hoặc mật khẩu không chính xác")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleGoogleSignIn = async () => {
+    setError("")
+    setLoading(true)
+
+    try {
+      await signIn("google", { callbackUrl: window.location.href })
+    } catch (error: any) {
+      console.error("Google sign-in error:", error)
+      setError("Đăng nhập với Google không thành công. Vui lòng thử lại sau.")
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -48,18 +111,23 @@ export default function LoginModal({ onClose }: LoginModalProps) {
         </div>
 
         <div className="p-6">
-          <form className="space-y-4">
+          {error && <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">{error}</div>}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400" />
+                  <Mail className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
                   type="email"
                   id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   className="pl-10 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
                   placeholder="name@example.com"
                 />
@@ -75,11 +143,23 @@ export default function LoginModal({ onClose }: LoginModalProps) {
                   <Lock className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   className="pl-10 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
                   placeholder="••••••••"
                 />
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -87,7 +167,10 @@ export default function LoginModal({ onClose }: LoginModalProps) {
               <div className="flex items-center">
                 <input
                   id="remember-me"
+                  name="remember-me"
                   type="checkbox"
+                  checked={rememberMe}
+                  onChange={() => setRememberMe(!rememberMe)}
                   className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
@@ -95,16 +178,17 @@ export default function LoginModal({ onClose }: LoginModalProps) {
                 </label>
               </div>
 
-              <a href="#" className="text-sm font-medium text-teal-600 hover:text-teal-500">
+              <Link href="/auth/forgot-password" className="text-sm font-medium text-teal-600 hover:text-teal-500">
                 Quên mật khẩu?
-              </a>
+              </Link>
             </div>
 
             <button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-700 hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+              disabled={loading}
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-700 hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-70"
             >
-              Đăng nhập
+              {loading ? "Đang xử lý..." : "Đăng nhập"}
             </button>
           </form>
 
@@ -121,7 +205,9 @@ export default function LoginModal({ onClose }: LoginModalProps) {
             <div className="mt-6 flex justify-center">
               <button
                 type="button"
-                className="flex items-center justify-center py-2 px-6 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                onClick={handleGoogleSignIn}
+                disabled={loading}
+                className="flex items-center justify-center py-2 px-6 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-70"
               >
                 <Image src="/google-logo.png" alt="Google" width={20} height={20} className="mr-2 h-5 w-5" />
                 <span>Google</span>
@@ -132,9 +218,9 @@ export default function LoginModal({ onClose }: LoginModalProps) {
           <div className="mt-6 text-center text-sm text-gray-500">
             <p>
               Chưa có tài khoản?{" "}
-              <a href="#" className="font-medium text-teal-600 hover:text-teal-500">
+              <Link href="/auth/register" className="font-medium text-teal-600 hover:text-teal-500">
                 Đăng ký ngay
-              </a>
+              </Link>
             </p>
           </div>
         </div>
