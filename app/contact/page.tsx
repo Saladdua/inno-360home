@@ -42,28 +42,34 @@ export default function ContactPage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData = {
-        name: "",
-        email: "",
-        phone: "",
-        subject: "",
-        message: "",
-    };
-
-    const response = await fetch("http://localhost:5000/send-email", {
+    try {
+      const response = await fetch("http://localhost:5000/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
-    });
+      });
 
-    const result = await response.json();
-    if (result.success) {
-      console.log("Form submitted:", formData);
-        alert("Cảm ơn bạn đã liên hệ với chúng tôi. Chúng tôi sẽ phản hồi trong thời gian sớm nhất!");
-    } else {
+      const result = await response.json();
+      
+      if (result.success) {
+        console.log("Form submitted:", formData);
+        alert("Cảm ơn bạn đã liên hệ với chúng tôi. Chúng tôi sẽ phản hồi trong thời gian sớm nhất!");
+        // Reset form after successful submission
+        setFormData({
+          name: "",
+          email: "", 
+          phone: "",
+          subject: "",
+          message: ""
+        });
+      } else {
         alert("Gửi tin nhắn thất bại!");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Có lỗi xảy ra khi gửi tin nhắn. Vui lòng thử lại sau!");
     }
-};
+  };
 
 
   return (
@@ -97,7 +103,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold mb-2">Địa chỉ</h3>
-                    <p className="text-gray-600">Số 39 Thượng Thụy, Phú Thượng, Tây Hồ, Hà Nội</p>
+                    <p className="text-gray-600">Số 39 Thượng Thụy, Phú Thượng, Tây Hồ, Hà Nội</p>
                   </div>
                 </div>
 
@@ -124,7 +130,7 @@ export default function ContactPage() {
 
               <div className="mt-8">
                 <h3 className="text-xl font-semibold mb-4">Bản đồ</h3>
-                <div className="h-[300px] bg-gray-200 rounded-lg relative overflow-hidden">
+                <div className="h-[300px] bg-gray-200 rounded-lg relative overflow-hidden" style={{zIndex: 0}}>
                   <MapContainer 
                     center={position as MapContainerProps['center']}
                     zoom={15} 

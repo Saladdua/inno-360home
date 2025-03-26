@@ -217,12 +217,30 @@ export default function Home() {
       <section className="relative h-[600px]">
 
         {/*Floating Banners*/}
-        <div className="floating-banners">
-          <div className="banner left-banner">
-           <img src="/left-banner.jpg" alt="Left Banner" />
+        <div className="floating-banners fixed left-0 right-0 top-1/2 -translate-y-1/2 z-50 pointer-events-none">
+          <div 
+            className="banner left-banner fixed left-4"
+            style={{
+              maxWidth: '160px'
+            }}
+          >
+            <img 
+              src="/left-banner.jpg" 
+              alt="Left Banner"
+              className="w-full h-auto" 
+            />
           </div>
-          <div className="banner right-banner">
-            <img src="/right-banner.jpg" alt="Right Banner" />
+          <div 
+            className="banner right-banner fixed right-4"
+            style={{
+              maxWidth: '160px'
+            }}
+          >
+            <img 
+              src="/right-banner.jpg" 
+              alt="Right Banner"
+              className="w-full h-auto"
+            />
           </div>
         </div>
 

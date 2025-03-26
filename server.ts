@@ -29,7 +29,7 @@ app.post("/send-email", async (req, res) => {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: process.env.RECEIVER_EMAIL, // Your email to receive messages
-        subject: `New Contact Form Submission: ${subject}`,
+        subject: `[360Home] Liên Hệ Tư Vấn: ${subject}`,
         text: `Họ và tên: ${name}\nEmail: ${email}\nSố điện thoại: ${phone}\nNội dung:\n${message}`,
     };
 
