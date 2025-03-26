@@ -454,7 +454,7 @@ export default function Home() {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">TIN TỨC TỪ 360HOME</h2>
+            <h2 className="text-3xl font-bold text-gray-900">Tin tức từ 360HOME</h2>
             <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
               Cùng 360HOME lên ý tưởng cho dự án mới của bạn qua thông tin, tin tức về thiết kế, thầu thi công trong và ngoài nước
             </p>
