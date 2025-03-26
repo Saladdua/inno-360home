@@ -19,7 +19,7 @@ export default function MainNav({ onLoginClick }: MainNavProps) {
           <Image src="/logo.png" alt="360HOME Logo" width={120} height={40} className="h-10 w-auto" />
         </Link>
         <div className="hidden md:flex space-x-6 text-sm font-medium ml-auto">
-          <Link href="/why-us" className="text-teal-700 hover:text-teal-600">
+          <Link href="/about" className="text-teal-700 hover:text-teal-600">
             LÝ DO LỰA CHỌN 360HOME
           </Link>
           <Link href="https://360home.vn/xu-huong-thiet-ke-noi-that/" className="text-teal-700 hover:text-teal-600">
@@ -59,7 +59,7 @@ export default function MainNav({ onLoginClick }: MainNavProps) {
         <div className="absolute top-full left-0 right-0 bg-white shadow-md z-50 md:hidden">
           <div className="flex flex-col p-4">
             <Link
-              href="/why-us"
+              href="/about"
               className="py-2 text-teal-700 hover:text-teal-600"
               onClick={() => setMobileMenuOpen(false)}
             >
