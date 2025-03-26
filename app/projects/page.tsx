@@ -7,6 +7,7 @@ import { MessageSquare, Mail, Phone } from "lucide-react"
 import MainNav from "@/components/main-nav"
 import Footer from "@/components/footer"
 import LoginModal from "@/components/login-modal"
+import FloatingContactButtons from "@/components/floating-contact-buttons"
 
 export default function ProjectsPage() {
   const [showLoginModal, setShowLoginModal] = useState(false)
@@ -147,17 +148,7 @@ export default function ProjectsPage() {
       <Footer />
 
       {/* Floating Contact Buttons */}
-      <div className="fixed right-4 bottom-4 flex flex-col space-y-3 z-50">
-        <button className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors">
-          <Mail className="h-6 w-6" />
-        </button>
-        <button className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors">
-          <MessageSquare className="h-6 w-6" />
-        </button>
-        <button className="bg-red-500 text-white p-3 rounded-full shadow-lg hover:bg-red-600 transition-colors">
-          <Phone className="h-6 w-6" />
-        </button>
-      </div>
+      <FloatingContactButtons />
 
       {/* Login Modal */}
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}

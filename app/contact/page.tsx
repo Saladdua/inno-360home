@@ -11,6 +11,7 @@ import LoginModal from "@/components/login-modal"
 import { MapContainer, TileLayer, Marker, Popup, MapContainerProps } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import FloatingContactButtons from "@/components/floating-contact-buttons"
 
 export default function ContactPage() {
   const position: [number, number] = [21.088348865921386, 105.79562298335514]; // Replace with your actual coordinates
@@ -240,17 +241,7 @@ export default function ContactPage() {
       <Footer />
 
       {/* Floating Contact Buttons */}
-      <div className="fixed right-4 bottom-4 flex flex-col space-y-3 z-50">
-        <button className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors">
-          <Mail className="h-6 w-6" />
-        </button>
-        <button className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors">
-          <MessageSquare className="h-6 w-6" />
-        </button>
-        <button className="bg-red-500 text-white p-3 rounded-full shadow-lg hover:bg-red-600 transition-colors">
-          <Phone className="h-6 w-6" />
-        </button>
-      </div>
+      <FloatingContactButtons />
 
       {/* Login Modal */}
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}

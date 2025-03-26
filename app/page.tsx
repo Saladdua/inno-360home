@@ -10,6 +10,7 @@ import LoginModal from "@/components/login-modal"
 import ServiceCard from "@/components/service-card"
 import DesignProcess from "@/components/design-process"
 import PartnerLogos from "@/components/partner-logos"
+import FloatingContactButtons from "@/components/floating-contact-buttons"
 import { icon } from "leaflet"
 import { link } from "fs"
 
@@ -520,36 +521,7 @@ export default function Home() {
       <Footer />
 
       {/* Floating Contact Buttons */}
-      <div className="fixed right-4 bottom-4 flex flex-col space-y-3 z-50">
-      {/* Floating Notification */}
-      {copySuccess && (
-        <div className="absolute right-14 bottom-12 bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg transition-opacity duration-300">
-          {copySuccess}
-        </div>
-      )}
-
-      {/* Buttons */}
-      <button
-        onClick={() => handleCopy("contact@360home.vn")}
-        className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
-      >
-        <Mail className="h-6 w-6" />
-      </button>
-
-      <button
-        onClick={() => window.open("https://zalo.me/4438617373561395664", "_blank")}
-        className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
-      >
-        <MessageSquare className="h-6 w-6" />
-      </button>
-
-      <button
-        onClick={() => handleCopy("(+84) 88 6666 360")}
-        className="bg-red-500 text-white p-3 rounded-full shadow-lg hover:bg-red-600 transition-colors"
-      >
-        <Phone className="h-6 w-6" />
-      </button>
-    </div>
+      <FloatingContactButtons />
 
       {/* Login Modal */}
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}

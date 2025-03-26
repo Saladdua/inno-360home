@@ -7,6 +7,8 @@ import { ChevronRight, Mail, Phone, MessageSquare } from "lucide-react"
 import MainNav from "@/components/main-nav"
 import Footer from "@/components/footer"
 import LoginModal from "@/components/login-modal"
+import FloatingContactButtons from "@/components/floating-contact-buttons"
+import StakeholderBoxes from "@/components/stakeholder-boxes"
 
 export default function AboutPage() {
   const [showLoginModal, setShowLoginModal] = useState(false)
@@ -84,51 +86,12 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* Hero Section */}
-      <section className="relative h-[500px]">
-        <div className="absolute inset-0">
-          <Image src="/about-background.png" alt="About 360HOME" fill className="object-cover" priority />
-          <div className="absolute inset-0 bg-black/40"></div>
-        </div>
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white px-4">
-          <h1 className="text-5xl font-bold mb-4">360HOME</h1>
-          <p className="text-xl max-w-3xl">Nền tảng kết nối thông minh giữa các bên đối tác</p>
-        </div>
-      </section>
-
       {/* Stakeholders Section */}
-      <section className="py-12 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-            {stakeholders.map((stakeholder) => (
-              <div key={stakeholder.id} className="bg-white rounded-lg shadow-md overflow-hidden h-full">
-                <div className="p-6 flex flex-col h-full">
-                  <div className="flex items-center justify-center mb-4">
-                    <div className="w-16 h-16 flex items-center justify-center">
-                      <Image
-                        src={stakeholder.icon || "/placeholder.svg"}
-                        alt={stakeholder.title}
-                        width={64}
-                        height={64}
-                        className="w-full h-auto"
-                      />
-                    </div>
-                  </div>
-                  <h3 className="text-center text-teal-700 font-bold text-lg mb-4">{stakeholder.title}</h3>
-                  <ul className="space-y-2 text-sm text-gray-700 flex-grow">
-                    {stakeholder.benefits.map((benefit, index) => (
-                      <li key={index} className="flex items-start">
-                        <span className="text-teal-700 mr-2">•</span>
-                        <span>{benefit}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            <StakeholderBoxes
+        backgroundImage="/about-background.png"
+        title="360HOME"
+        subtitle="Nền tảng kết nối thông minh giữa các bên đối tác"
+      />
 
       {/* About Company Section */}
       <section className="py-16 bg-gray-50">
@@ -361,17 +324,7 @@ export default function AboutPage() {
       <Footer />
 
       {/* Floating Contact Buttons */}
-      <div className="fixed right-4 bottom-4 flex flex-col space-y-3 z-50">
-        <button className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors">
-          <Mail className="h-6 w-6" />
-        </button>
-        <button className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors">
-          <MessageSquare className="h-6 w-6" />
-        </button>
-        <button className="bg-red-500 text-white p-3 rounded-full shadow-lg hover:bg-red-600 transition-colors">
-          <Phone className="h-6 w-6" />
-        </button>
-      </div>
+      <FloatingContactButtons />
 
       {/* Login Modal */}
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}

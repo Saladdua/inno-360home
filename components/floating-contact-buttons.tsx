@@ -32,18 +32,18 @@ export default function FloatingContactButtons() {
       glowColor: "blue",
       tooltip: "Copy email address",
       action: () => {
-        navigator.clipboard.writeText("info@360home.vn")
+        navigator.clipboard.writeText("contact@360home.vn")
         showNotification("Email copied to clipboard!", "email")
       },
     },
     {
       id: "chat",
-      icon: <MessageSquare className="h-6 w-6" />,
+      icon: <img src="/zalo.png" alt="Chat Icon" className="h-6 w-6" />,
       color: "bg-blue-500 hover:bg-blue-600",
       glowColor: "blue",
       tooltip: "Chat with us",
       action: () => {
-        window.open("https://example.com/chat", "_blank")
+        window.open("https://zalo.me/4438617373561395664", "_blank");
       },
     },
     {
@@ -53,7 +53,7 @@ export default function FloatingContactButtons() {
       glowColor: "red",
       tooltip: "Copy phone number",
       action: () => {
-        navigator.clipboard.writeText("1900 1234 56")
+        navigator.clipboard.writeText("(+84) 88 6666 360")
         showNotification("Phone number copied to clipboard!", "phone")
       },
     },
