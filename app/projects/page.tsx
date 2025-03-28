@@ -21,6 +21,7 @@ export default function ProjectsPage() {
       image: "/project1.jpg",
       logo: "/lumi-logo.png",
       description: "Thiết kế nội thất căn hộ cao cấp tại dự án LUMI HANOI",
+      link: "https://lumihanoi.360home.vn/",
     },
     {
       id: 2,
@@ -29,6 +30,7 @@ export default function ProjectsPage() {
       image: "/project2.jpg",
       logo: "/diamond-logo.png",
       description: "Thiết kế và thi công nội thất căn hộ tại DIAMOND CROWN",
+      link: "https://diamondcrownhaiphong.360home.vn/",
     },
     {
       id: 3,
@@ -37,6 +39,7 @@ export default function ProjectsPage() {
       image: "/project3.jpg",
       logo: "/heritage-logo.png",
       description: "Hoàn thiện nội thất căn hộ cao cấp tại HERITAGE WEST LAKE",
+      link: "https://heritagewestlakes.360home.vn/",
     },
     {
       id: 4,
@@ -45,6 +48,7 @@ export default function ProjectsPage() {
       image: "/project4.jpg",
       logo: "/minato-logo.png",
       description: "Thiết kế nội thất hiện đại cho căn hộ THE MINATO RESIDENT",
+      link: "https://theminatoresidence.360home.vn/",
     },
     {
       id: 5,
@@ -53,6 +57,7 @@ export default function ProjectsPage() {
       image: "/project5.jpg",
       logo: "/hoang-huy-logo.png",
       description: "Thiết kế không gian thương mại tại HOANG HUY COMMERCE",
+      link: "https://hoanghuycommerce.360home.vn/",
     },
   ]
 
@@ -109,7 +114,7 @@ export default function ProjectsPage() {
           {/* Projects Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProjects.map((project) => (
-              <Link key={project.id} href={`/projects/${project.id}`} className="group">
+              <Link key={project.id} href={project.link} className="group">
                 <div className="bg-white rounded-lg overflow-hidden shadow-md h-full">
                   <div className="p-4 flex items-center justify-between bg-white">
                     <Image

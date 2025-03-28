@@ -26,6 +26,8 @@ export default function Home() {
       image: "/project1.jpg",
       imageAlt: "LUMI HANOI Project",
       images: [] as string[],
+      link: "https://lumihanoi.360home.vn/",
+
     },
     {
       id: 2,
@@ -35,6 +37,7 @@ export default function Home() {
       image: "/project2.jpg",
       imageAlt: "DIAMOND CROWN Project",
       images: [] as string[],
+      link: "https://diamondcrownhaiphong.360home.vn/",
     },
     {
       id: 3,
@@ -44,6 +47,7 @@ export default function Home() {
       image: "/project3.jpg",
       imageAlt: "HERITAGE Project",
       images: [] as string[],
+      link: "https://heritagewestlakes.360home.vn/",
     },
     {
       id: 4,
@@ -53,6 +57,7 @@ export default function Home() {
       image: "/project4.jpg",
       imageAlt: "THE MINATO RESIDENT Project",
       images: [] as string[],
+      link: "https://theminatoresidence.360home.vn/",
     },
     {
       id: 5,
@@ -62,6 +67,7 @@ export default function Home() {
       image: "/project5.jpg",
       imageAlt: "HOANG HUY COMMERCE Project",
       images: [] as string[],
+      link: "https://hoanghuycommerce.360home.vn/",
     },
   ]
 
@@ -359,9 +365,14 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="px-4 pb-4">
-                      <button className="w-full py-3 bg-[#8BC34A] text-white font-medium rounded-md hover:bg-[#7CB342] transition-colors">
-                        NHẬN THIẾT KẾ
-                      </button>
+                    <a
+                      href={project.link} // Use project-specific link
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full block text-center py-3 bg-[#8BC34A] text-white font-medium rounded-md hover:bg-[#7CB342] transition-colors"
+                    >
+                      NHẬN THIẾT KẾ
+                    </a>
                     </div>
                   </div>
                 </div>

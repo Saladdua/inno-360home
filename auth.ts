@@ -9,7 +9,7 @@ const SECRET_KEY = process.env.JWT_SECRET || "secret";
 
 // **Register User**
 router.post("/register", (async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, name } = req.body;
 
   // Check if user exists
   const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -20,7 +20,7 @@ router.post("/register", (async (req, res) => {
 
   // Create user
   const user = await prisma.user.create({
-    data: { email, password: hashedPassword },
+    data: { email, password: hashedPassword, name },
   });
 
   res.json({ message: "User registered successfully" });
