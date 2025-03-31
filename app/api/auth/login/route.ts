@@ -1,24 +1,32 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { signIn } from "@/lib/auth"
+import { validateCredentials, createSession } from "@/lib/auth"
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await request.json()
+    const { email, password } = await req.json()
 
+    // Validate input
     if (!email || !password) {
-      return NextResponse.json({ error: "Email and password are required" }, { status: 400 })
+      return NextResponse.json({ message: "Vui lòng điền đầy đủ thông tin" }, { status: 400 })
     }
 
-    const user = await signIn(email, password)
+    // Validate credentials
+    const user = await validateCredentials(email, password)
 
     if (!user) {
-      return NextResponse.json({ error: "Invalid email or password" }, { status: 401 })
+      return NextResponse.json({ message: "Email hoặc mật khẩu không đúng" }, { status: 401 })
     }
 
-    return NextResponse.json({ user })
+    // Create session
+    await createSession(user.id.toString())
+
+    return NextResponse.json({
+      message: "Đăng nhập thành công",
+      user,
+    })
   } catch (error) {
     console.error("Login error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    return NextResponse.json({ message: "Đăng nhập không thành công. Vui lòng thử lại sau." }, { status: 500 })
   }
 }
 
