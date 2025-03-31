@@ -91,9 +91,17 @@ export default function RegisterPage() {
 
         {/* Right side - Form */}
         <div className="md:w-3/5 p-8">
-          <div className="flex justify-center mb-6">
-            <Image src="/logo.png" alt="360HOME Logo" width={120} height={40} />
-          </div>
+        <div className="flex justify-center mb-6">
+          <Link href="/" passHref>
+            <Image
+              src="/logo.png"
+              alt="360HOME Logo"
+              width={120}
+              height={40}
+              className="cursor-pointer"
+            />
+          </Link>
+        </div>
 
           <h2 className="text-2xl font-bold text-teal-700 mb-2">ĐĂNG KÝ 360HOME</h2>
           <p className="text-gray-600 mb-6">
@@ -198,7 +206,7 @@ export default function RegisterPage() {
           <div className="mt-6 text-center">
             <p className="text-gray-600">
               Đã có tài khoản?{" "}
-              <Link href="/auth/login" className="text-teal-700 hover:underline">
+              <Link href="/" passHref className="text-teal-700 hover:underline">
                 Đăng nhập
               </Link>
             </p>

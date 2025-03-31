@@ -105,7 +105,7 @@ export default function ForgotPasswordPage() {
 
           <div className="mt-6 text-center">
             <p className="text-gray-600">
-              <Link href="/auth/login" className="text-teal-700 hover:underline">
+              <Link href="/" passHref className="text-teal-700 hover:underline">
                 Quay lại đăng nhập
               </Link>
             </p>
