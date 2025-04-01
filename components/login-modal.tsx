@@ -5,7 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { X, Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { signIn } from "next-auth/react";
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 interface LoginModalProps {
   onClose: () => void;
@@ -54,21 +55,16 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     }
 
     try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        email: formData.email,
-        password: formData.password,
-      });
-
-      if (result?.error) {
-        throw new Error(result.error);
-      }
-
+      await signInWithEmailAndPassword(auth, formData.email, formData.password);
       onClose(); // Close modal
       router.refresh();
     } catch (error: any) {
       console.error("Login error:", error);
-      setError(error.message || "Email hoặc mật khẩu không chính xác");
+      if (error.code === 'auth/invalid-credential') {
+        setError("Email hoặc mật khẩu không đúng");
+      } else {
+        setError("Đăng nhập không thành công. Vui lòng thử lại sau.");
+      }
     } finally {
       setLoading(false);
     }
@@ -79,10 +75,14 @@ export default function LoginModal({ onClose }: LoginModalProps) {
     setLoading(true);
 
     try {
-      await signIn("google", { callbackUrl: window.location.href });
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      onClose();
+      router.refresh();
     } catch (error: any) {
       console.error("Google sign-in error:", error);
       setError("Đăng nhập với Google không thành công. Vui lòng thử lại sau.");
+    } finally {
       setLoading(false);
     }
   };

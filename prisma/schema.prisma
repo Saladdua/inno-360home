@@ -15,11 +15,13 @@ model User {
   name      String
   email     String   @unique
   password  String
+  firebaseUid String? @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   accounts  Account[]
   sessions  Session[]
   resetTokens PasswordResetToken[]
+  tokens    Token[]
 }
 
 model News {
@@ -39,6 +41,7 @@ model Account {
   type              String
   provider          String
   providerAccountId String
+  firebaseUid String? @unique
   refresh_token     String?  @db.Text
   access_token      String?  @db.Text
   expires_at        Int?
@@ -84,5 +87,19 @@ model PasswordResetToken {
   updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Token {
+  id          Int      @id @default(autoincrement())
+  token       String   @unique
+  userId      Int
+  firebaseUid String
+  expires     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([token])
+  @@index([userId])
 }
 

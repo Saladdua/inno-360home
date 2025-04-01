@@ -2,8 +2,10 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Menu, X } from "lucide-react"
+import { auth } from "@/lib/firebase"
+import { onAuthStateChanged, signOut } from "firebase/auth"
 
 interface MainNavProps {
   onLoginClick: () => void
@@ -11,6 +13,27 @@ interface MainNavProps {
 
 export default function MainNav({ onLoginClick }: MainNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false)
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user)
+      if (user) {
+        setShowSuccessMessage(true)
+        setTimeout(() => setShowSuccessMessage(false), 3000)
+      }
+    })
+    return () => unsubscribe()
+  }, [])
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth)
+    } catch (error) {
+      console.error("Logout error:", error)
+    }
+  }
 
   return (
     <nav className="bg-white py-4 px-6 flex items-center justify-between shadow-sm relative z-20">
@@ -37,18 +60,35 @@ export default function MainNav({ onLoginClick }: MainNavProps) {
         </div>
       </div>
       <div className="flex items-center space-x-4">
+        {showSuccessMessage && (
+          <div className="absolute -top-12 right-0 bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded">
+            Đăng nhập thành công!
+          </div>
+        )}
         <Link
           href="/contact"
           className="bg-teal-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-teal-600 transition-colors hidden md:block"
         >
           LIÊN HỆ TƯ VẤN
         </Link>
-        <button
-          onClick={onLoginClick}
-          className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors hidden md:block"
-        >
-          ĐĂNG NHẬP
-        </button>
+        {user ? (
+          <div className="hidden md:flex items-center space-x-4">
+            <span className="text-gray-700 text-sm">Xin chào, {user.displayName || user.email}</span>
+            <button
+              onClick={handleLogout}
+              className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors"
+            >
+              ĐĂNG XUẤT
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={onLoginClick}
+            className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors hidden md:block"
+          >
+            ĐĂNG NHẬP
+          </button>
+        )}
         <button className="md:hidden text-gray-700" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
           {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
@@ -101,15 +141,30 @@ export default function MainNav({ onLoginClick }: MainNavProps) {
               >
                 LIÊN HỆ TƯ VẤN
               </Link>
-              <button
-                onClick={() => {
-                  onLoginClick()
-                  setMobileMenuOpen(false)
-                }}
-                className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors"
-              >
-                ĐĂNG NHẬP
-              </button>
+              {user ? (
+                <>
+                  <span className="text-gray-700 text-sm text-center">Xin chào, {user.displayName || user.email}</span>
+                  <button
+                    onClick={() => {
+                      handleLogout()
+                      setMobileMenuOpen(false)
+                    }}
+                    className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors"
+                  >
+                    ĐĂNG XUẤT
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    onLoginClick()
+                    setMobileMenuOpen(false)
+                  }}
+                  className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors"
+                >
+                  ĐĂNG NHẬP
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -117,4 +172,3 @@ export default function MainNav({ onLoginClick }: MainNavProps) {
     </nav>
   )
 }
-

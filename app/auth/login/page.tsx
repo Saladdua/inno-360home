@@ -8,6 +8,8 @@ import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Mail, Eye, EyeOff } from "lucide-react"
 import { signIn } from "next-auth/react"
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
+import { auth } from "@/lib/firebase"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -54,6 +56,9 @@ export default function LoginPage() {
     }
 
     try {
+      // Sign in with Firebase
+      await signInWithEmailAndPassword(auth, formData.email, formData.password)
+
       // Sign in with NextAuth
       const result = await signIn("credentials", {
         redirect: false,
@@ -82,6 +87,8 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
+      const provider = new GoogleAuthProvider()
+      await signInWithPopup(auth, provider)
       await signIn("google", { callbackUrl: "/" })
     } catch (error: any) {
       console.error("Google sign-in error:", error)
@@ -228,4 +235,3 @@ export default function LoginPage() {
     </div>
   )
 }
-

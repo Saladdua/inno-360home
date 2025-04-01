@@ -7,6 +7,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { User, Mail, Eye, EyeOff } from "lucide-react"
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
+import { auth } from "@/lib/firebase"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -52,30 +54,32 @@ export default function RegisterPage() {
     }
 
     try {
-      // Register user via API
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.username,
-          email: formData.email,
-          password: formData.password,
-        }),
+      // Create user in Firebase
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      
+      // Update profile with username
+      await updateProfile(userCredential.user, {
+        displayName: formData.username
       })
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message || "Đăng ký không thành công")
-      }
-
       // Redirect to login page with success message
-      router.push("/auth/login?registered=true")
+      router.push("/?registered=true")
     } catch (error: any) {
       console.error("Registration error:", error)
-      setError(error.message || "Đăng ký không thành công. Vui lòng thử lại sau.")
+      let errorMessage = "Đăng ký không thành công. Vui lòng thử lại sau."
+      
+      // Handle Firebase specific errors
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = "Email đã được sử dụng"
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = "Email không hợp lệ"
+      } else if (error.code === 'auth/operation-not-allowed') {
+        errorMessage = "Đăng ký tạm thời không khả dụng"
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = "Mật khẩu không đủ mạnh"
+      }
+      
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -216,4 +220,3 @@ export default function RegisterPage() {
     </div>
   )
 }
-

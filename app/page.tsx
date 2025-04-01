@@ -17,6 +17,23 @@ import { link } from "fs"
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [showLoginModal, setShowLoginModal] = useState(false)
+  const [showRegisterSuccess, setShowRegisterSuccess] = useState(false)
+
+  useEffect(() => {
+    // Check URL params for registration success
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('registered') === 'true') {
+      setShowRegisterSuccess(true)
+      // Clear the URL parameter
+      window.history.replaceState({}, '', window.location.pathname)
+      // Hide success message after 5 seconds
+      setTimeout(() => {
+        setShowRegisterSuccess(false)
+        setShowLoginModal(true) // Show login modal after success message
+      }, 5000)
+    }
+  }, [])
+
   const projects = [
     {
       id: 1,
@@ -219,6 +236,18 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <MainNav onLoginClick={() => setShowLoginModal(true)} />
+
+      {/* Registration Success Message */}
+      {showRegisterSuccess && (
+        <div className="fixed top-4 right-4 z-50 bg-white border border-green-400 text-green-600 px-4 py-3 rounded flex items-center">
+          <Check className="h-5 w-5 mr-2" />
+          <div>
+            <p className="font-bold">Đăng ký thành công!</p>
+            <p>Vui lòng đăng nhập để tiếp tục.</p>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="relative h-[600px]">
 
@@ -557,4 +586,3 @@ export default function Home() {
     </main>
   )
 }
-
