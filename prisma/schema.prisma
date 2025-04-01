@@ -11,17 +11,17 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  firebaseUid String? @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  accounts  Account[]
-  sessions  Session[]
+  id          Int                  @id @default(autoincrement())
+  name        String
+  email       String               @unique
+  password    String?
+  firebaseUid String?              @unique
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  accounts    Account[]
+  sessions    Session[]
   resetTokens PasswordResetToken[]
-  tokens    Token[]
+  tokens      Token[]
 }
 
 model News {
@@ -41,7 +41,7 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  firebaseUid String? @unique
+  firebaseUid       String?  @unique
   refresh_token     String?  @db.Text
   access_token      String?  @db.Text
   expires_at        Int?
@@ -102,4 +102,3 @@ model Token {
   @@index([token])
   @@index([userId])
 }
-

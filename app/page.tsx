@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ChevronLeft, ChevronRight, Mail, Phone, MessageSquare, Check, ArrowRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, Check, ArrowRight } from "lucide-react"
 import MainNav from "@/components/main-nav"
 import Footer from "@/components/footer"
 import LoginModal from "@/components/login-modal"
@@ -11,8 +11,6 @@ import ServiceCard from "@/components/service-card"
 import DesignProcess from "@/components/design-process"
 import PartnerLogos from "@/components/partner-logos"
 import FloatingContactButtons from "@/components/floating-contact-buttons"
-import { icon } from "leaflet"
-import { link } from "fs"
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -22,10 +20,10 @@ export default function Home() {
   useEffect(() => {
     // Check URL params for registration success
     const urlParams = new URLSearchParams(window.location.search)
-    if (urlParams.get('registered') === 'true') {
+    if (urlParams.get("registered") === "true") {
       setShowRegisterSuccess(true)
       // Clear the URL parameter
-      window.history.replaceState({}, '', window.location.pathname)
+      window.history.replaceState({}, "", window.location.pathname)
       // Hide success message after 5 seconds
       setTimeout(() => {
         setShowRegisterSuccess(false)
@@ -44,7 +42,6 @@ export default function Home() {
       imageAlt: "LUMI HANOI Project",
       images: [] as string[],
       link: "https://lumihanoi.360home.vn/",
-
     },
     {
       id: 2,
@@ -96,47 +93,47 @@ export default function Home() {
   // State to track current image for each project
   const [currentImages, setCurrentImages] = useState(projects.map(() => 0))
 
-  const [copySuccess, setCopySuccess] = useState<string | null>(null);
+  const [copySuccess, setCopySuccess] = useState<string | null>(null)
 
   // Function to copy text and show notification
   const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text)
-        .then(() => {
-            setCopySuccess("Copied to clipboard!");
-            setTimeout(() => setCopySuccess(null), 2000);
-        })
-        .catch((err) => {
-            console.error("Failed to copy: ", err);
-            setCopySuccess("Failed to copy!");
-            setTimeout(() => setCopySuccess(null), 2000);
-        });
-};
-
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setCopySuccess("Copied to clipboard!")
+        setTimeout(() => setCopySuccess(null), 2000)
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err)
+        setCopySuccess("Failed to copy!")
+        setTimeout(() => setCopySuccess(null), 2000)
+      })
+  }
 
   // Function to rotate images for a specific project
   interface Project {
-    id: number;
-    logo: string;
-    logoAlt: string;
-    title: string;
-    image: string;
-    imageAlt: string;
-    images: string[];
+    id: number
+    logo: string
+    logoAlt: string
+    title: string
+    image: string
+    imageAlt: string
+    images: string[]
   }
 
-  type RotateImage = (projectIndex: number, imageIndex?: number | null) => void;
+  type RotateImage = (projectIndex: number, imageIndex?: number | null) => void
 
   const rotateImage: RotateImage = useCallback((projectIndex, imageIndex = null) => {
     setCurrentImages((prev) => {
-      const newState = [...prev];
+      const newState = [...prev]
       if (imageIndex !== null) {
-        newState[projectIndex] = imageIndex;
+        newState[projectIndex] = imageIndex
       } else {
-        newState[projectIndex] = (newState[projectIndex] + 1) % 3;
+        newState[projectIndex] = (newState[projectIndex] + 1) % 3
       }
-      return newState;
-    });
-  }, []);
+      return newState
+    })
+  }, [])
 
   const totalSlides = Math.ceil(projects.length / 3)
 
@@ -162,16 +159,18 @@ export default function Home() {
   // Auto-rotate images
   useEffect(() => {
     const intervals = projects.map((_, index) => {
-      return setInterval(() => {
-        rotateImage(index);
-      }, 3000 + index * 500); // Stagger transitions
-    });
-  
+      return setInterval(
+        () => {
+          rotateImage(index)
+        },
+        3000 + index * 500,
+      ) // Stagger transitions
+    })
+
     return () => {
-      intervals.forEach(clearInterval); // Cleanup previous intervals
-    };
-  }, [projects, rotateImage]); // Ensure it updates properly
-  
+      intervals.forEach(clearInterval) // Cleanup previous intervals
+    }
+  }, [projects, rotateImage]) // Ensure it updates properly
 
   // Add this with the other useEffect hooks
   useEffect(() => {
@@ -182,10 +181,10 @@ export default function Home() {
     return () => clearInterval(interval)
   }, [heroImages.length])
 
-  const services = [
+  const [services, setServices] = useState([
     {
       id: 1,
-      title: "360HOME - Giải pháp thông minh và toàn diện cho thiết kế nội thất",
+      title: "360HOME - Giải pháp thông minh và toàn diện cho thiết kế nội thất",
       description:
         "360Home cung cấp các thiết kế chuyên nghiệp hoàn toàn miễn phí kèm theo báo giá chi tiết dịch vụ nội thất trọn gói của mình cho khách tất cả khách hàng. Trước bối cảnh chính sách nhà nước phê duyệt chiến lược phát triển ngành xây dựng đến",
       image: "/services/news1.png",
@@ -195,8 +194,9 @@ export default function Home() {
     },
     {
       id: 2,
-      title: "Cập nhật tiến độ dự án LUMI CAPITALAND Hanoi",
-      description: "Mặc dù điều kiện thời tiết tại Hà Nội trong tháng vừa qua không được thuận lợi, dự án Lumi Hanoi vẫn đảm bảo tiến độ xây dựng được diễn ra theo kế hoạch và đạt được những cột mốc quan trọng.",
+      title: "Cập nhật tiến độ dự án LUMI CAPITALAND Hanoi",
+      description:
+        "Mặc dù điều kiện thời tiết tại Hà Nội trong tháng vừa qua không được thuận lợi, dự án Lumi Hanoi vẫn đảm bảo tiến độ xây dựng được diễn ra theo kế hoạch và đạt được những cột mốc quan trọng.",
       image: "/services/news2.jpg",
       date: "12/03/2025",
       icon: "/logo.png",
@@ -205,7 +205,8 @@ export default function Home() {
     {
       id: 3,
       title: "Các xu hướng trang trí nội thất thịnh hành năm 2025",
-      description: "Bỏ qua tone màu trung tính, các không gian sống đa dạng màu sắc, có góc sáng tạo tại nhà… sẽ được ưa chuộng nhiều hơn trong năm mới.",
+      description:
+        "Bỏ qua tone màu trung tính, các không gian sống đa dạng màu sắc, có góc sáng tạo tại nhà… sẽ được ưa chuộng nhiều hơn trong năm mới.",
       image: "/services/news3.png",
       date: "22/01/2025",
       icon: "/logo.png",
@@ -213,14 +214,34 @@ export default function Home() {
     },
     {
       id: 4,
-      title: "Đắm mình trong không gian “thiên nhiên xanh” giữa lòng đô thị",
-      description: "Khu vườn treo phủ kín mặt tiền giúp tạo bóng mát, điều hòa nhiệt độ công trình và góp thêm mảng xanh cho đô thị.",
+      title: 'Đắm mình trong không gian "thiên nhiên xanh" giữa lòng đô thị',
+      description:
+        "Khu vườn treo phủ kín mặt tiền giúp tạo bóng mát, điều hòa nhiệt độ công trình và góp thêm mảng xanh cho đô thị.",
       image: "/services/news4.jpg",
       date: "03/03/2025",
       icon: "/logo.png",
       link: "https://360home.vn/dam-minh-trong-khong-gian-thien-nhien-xanh-giua-long-do-thi/",
     },
-  ];
+  ])
+
+  // Fetch news from API
+  useEffect(() => {
+    async function fetchNews() {
+      try {
+        const response = await fetch("/api/news?featured=true&count=4")
+        if (response.ok) {
+          const data = await response.json()
+          if (data && data.length > 0) {
+            setServices(data)
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching news:", error)
+      }
+    }
+
+    fetchNews()
+  }, [])
 
   // Rendering the "Tìm hiểu thêm" button
   services.map((services) => (
@@ -231,7 +252,7 @@ export default function Home() {
         Tìm hiểu thêm →
       </a>
     </div>
-  ));
+  ))
 
   return (
     <main className="min-h-screen">
@@ -250,32 +271,23 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative h-[600px]">
-
         {/*Floating Banners*/}
         <div className="floating-banners fixed left-0 right-0 top-1/2 -translate-y-1/2 z-50 pointer-events-none">
-          <div 
+          <div
             className="banner left-banner fixed left-4"
             style={{
-              maxWidth: '160px'
+              maxWidth: "160px",
             }}
           >
-            <img 
-              src="/left-banner.jpg" 
-              alt="Left Banner"
-              className="w-full h-auto" 
-            />
+            <img src="/left-banner.jpg" alt="Left Banner" className="w-full h-auto" />
           </div>
-          <div 
+          <div
             className="banner right-banner fixed right-4"
             style={{
-              maxWidth: '160px'
+              maxWidth: "160px",
             }}
           >
-            <img 
-              src="/right-banner.jpg" 
-              alt="Right Banner"
-              className="w-full h-auto"
-            />
+            <img src="/right-banner.jpg" alt="Right Banner" className="w-full h-auto" />
           </div>
         </div>
 
@@ -394,14 +406,14 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="px-4 pb-4">
-                    <a
-                      href={project.link} // Use project-specific link
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full block text-center py-3 bg-[#8BC34A] text-white font-medium rounded-md hover:bg-[#7CB342] transition-colors"
-                    >
-                      NHẬN THIẾT KẾ
-                    </a>
+                      <a
+                        href={project.link} // Use project-specific link
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full block text-center py-3 bg-[#8BC34A] text-white font-medium rounded-md hover:bg-[#7CB342] transition-colors"
+                      >
+                        NHẬN THIẾT KẾ
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -423,90 +435,86 @@ export default function Home() {
 
       {/* Why Choose Us Section */}
       <section className="py-16 bg-gray-50">
-  <div className="max-w-7xl mx-auto px-4">
-    <div className="text-center mb-12">
-      <h2 className="text-3xl font-bold text-gray-900">Lý do lựa chọn 360HOME</h2>
-      <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-        Chúng tôi cung cấp giải pháp toàn diện cho không gian sống của bạn
-      </p>
-    </div>
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900">Lý do lựa chọn 360HOME</h2>
+            <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+              Chúng tôi cung cấp giải pháp toàn diện cho không gian sống của bạn
+            </p>
+          </div>
 
-    <div className="flex flex-col items-center w-full">
-  {/* ✅ Grid with 5 columns */}
-  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
-    {[
-      { 
-        title: "CHỦ NHÀ", 
-        image: "/why-choose-1.png",
-        description: [
-          "Thoả sức xem thiết kế căn hộ tương lai của mình.", 
-          "Tặng thiết kế miễn phí."
-        ] 
-      },
-      { 
-        title: "CHỦ ĐẦU TƯ DỰ ÁN", 
-        image: "/why-choose-2.png",
-        description: [
-          "Làm phong phú bộ tài liệu bán hàng.", 
-          "Đồng hành cùng CĐT trong quảng bá sản phẩm."
-        ] 
-      },
-      { 
-        title: "ĐƠN VỊ CUNG ỨNG", 
-        image: "/why-choose-3.png",
-        description: [
-          "Thúc đẩy bán hàng tốt hơn.", 
-          "Tham gia vào chợ thương mại điện tử 360Market."
-        ] 
-      },
-      { 
-        title: "NHÀ THẦU THI CÔNG", 
-        image: "/why-choose-4.png",
-        description: [
-          "Kết nối với chủ nhà để cung cấp dịch vụ thi công.", 
-          "Tiết kiệm chi phí do thi công trọng điểm."
-        ] 
-      },
-      { 
-        title: "TƯ VẤN THIẾT KẾ", 
-        image: "/why-choose-5.png",
-        description: [
-          "Truy cập thư viện thiết kế miễn phí.", 
-          "Hưởng chính sách mua nội thất dành riêng cho kiến trúc sư."
-        ] 
-      },
-    ].map((item, index) => (
-      <div key={index} className="bg-white p-6 rounded-lg shadow-md text-center min-w-[250px]">
-        {/* ✅ Different image for each column */}
-        <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <img src={item.image} alt={item.title} className="h-8 w-8" />
+          <div className="flex flex-col items-center w-full">
+            {/* ✅ Grid with 5 columns */}
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+              {[
+                {
+                  title: "CHỦ NHÀ",
+                  image: "/why-choose-1.png",
+                  description: ["Thoả sức xem thiết kế căn hộ tương lai của mình.", "Tặng thiết kế miễn phí."],
+                },
+                {
+                  title: "CHỦ ĐẦU TƯ DỰ ÁN",
+                  image: "/why-choose-2.png",
+                  description: ["Làm phong phú bộ tài liệu bán hàng.", "Đồng hành cùng CĐT trong quảng bá sản phẩm."],
+                },
+                {
+                  title: "ĐƠN VỊ CUNG ỨNG",
+                  image: "/why-choose-3.png",
+                  description: ["Thúc đẩy bán hàng tốt hơn.", "Tham gia vào chợ thương mại điện tử 360Market."],
+                },
+                {
+                  title: "NHÀ THẦU THI CÔNG",
+                  image: "/why-choose-4.png",
+                  description: [
+                    "Kết nối với chủ nhà để cung cấp dịch vụ thi công.",
+                    "Tiết kiệm chi phí do thi công trọng điểm.",
+                  ],
+                },
+                {
+                  title: "TƯ VẤN THIẾT KẾ",
+                  image: "/why-choose-5.png",
+                  description: [
+                    "Truy cập thư viện thiết kế miễn phí.",
+                    "Hưởng chính sách mua nội thất dành riêng cho kiến trúc sư.",
+                  ],
+                },
+              ].map((item, index) => (
+                <div key={index} className="bg-white p-6 rounded-lg shadow-md text-center min-w-[250px]">
+                  {/* ✅ Different image for each column */}
+                  <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <img src={item.image || "/placeholder.svg"} alt={item.title} className="h-8 w-8" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                  {item.description.map((text, idx) => (
+                    <p key={idx} className="text-gray-600">
+                      • {text}
+                    </p>
+                  ))}
+                </div>
+              ))}
+            </div>
+
+            {/* ✅ Centered Clickable Text */}
+            <div className="w-full flex justify-center mt-6">
+              <a
+                href="https://360home.vn/gioi-thieu/"
+                className="inline-flex items-center text-teal-700 font-medium hover:text-teal-600 transition-colors"
+              >
+                Xem tất cả dự án
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-4 h-4 text-teal-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
-        <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-        {item.description.map((text, idx) => (
-          <p key={idx} className="text-gray-600">• {text}</p>
-        ))}
-      </div>
-    ))}
-  </div>
-
-  {/* ✅ Centered Clickable Text */}
-  <div className="w-full flex justify-center mt-6">
-    <a 
-          href="https://360home.vn/gioi-thieu/"
-          className="inline-flex items-center text-teal-700 font-medium hover:text-teal-600 transition-colors"
-    >
-      Xem tất cả dự án 
-      <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-      </svg>
-    </a>
-  </div>
-</div>
-
-
-  </div>
-</section>
-
+      </section>
 
       {/* Services Section */}
       <section className="py-16">
@@ -514,7 +522,8 @@ export default function Home() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900">Tin tức từ 360HOME</h2>
             <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-              Cùng 360HOME lên ý tưởng cho dự án mới của bạn qua thông tin, tin tức về thiết kế, thầu thi công trong và ngoài nước
+              Cùng 360HOME lên ý tưởng cho dự án mới của bạn qua thông tin, tin tức về thiết kế, thầu thi công trong và
+              ngoài nước
             </p>
           </div>
 
@@ -586,3 +595,4 @@ export default function Home() {
     </main>
   )
 }
+

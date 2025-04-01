@@ -27,7 +27,8 @@ export async function POST(req: NextRequest) {
         data: {
           email: firebaseUser.email!,
           name: firebaseUser.displayName || '',
-          firebaseUid: firebaseUser.uid
+          firebaseUid: firebaseUser.uid,
+          password: '',
         }
       })
     }

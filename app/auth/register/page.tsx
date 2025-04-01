@@ -2,16 +2,16 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { User, Mail, Eye, EyeOff } from "lucide-react"
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
-import { auth } from "@/lib/firebase"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function RegisterPage() {
   const router = useRouter()
+  const { register, error, clearError } = useAuth()
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -20,66 +20,72 @@ export default function RegisterPage() {
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [error, setError] = useState("")
+  const [localError, setLocalError] = useState("")
   const [loading, setLoading] = useState(false)
+
+  // Clear errors when component mounts or unmounts
+  useEffect(() => {
+    clearError()
+    return () => clearError()
+  }, [clearError])
+
+  // Update local error when context error changes
+  useEffect(() => {
+    if (error) {
+      setLocalError(error)
+    }
+  }, [error])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
-    setError("") // Clear error when user types
+    setLocalError("") // Clear error when user types
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError("")
+    setLocalError("")
     setLoading(true)
 
     // Validate form
     if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
-      setError("Vui lòng điền đầy đủ thông tin")
+      setLocalError("Vui lòng điền đầy đủ thông tin")
       setLoading(false)
       return
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Mật khẩu không khớp")
+      setLocalError("Mật khẩu không khớp")
       setLoading(false)
       return
     }
 
     if (formData.password.length < 6) {
-      setError("Mật khẩu phải có ít nhất 6 ký tự")
+      setLocalError("Mật khẩu phải có ít nhất 6 ký tự")
       setLoading(false)
       return
     }
 
     try {
-      // Create user in Firebase
-      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password)
-      
-      // Update profile with username
-      await updateProfile(userCredential.user, {
-        displayName: formData.username
-      })
+      await register(formData.username, formData.email, formData.password)
 
       // Redirect to login page with success message
-      router.push("/?registered=true")
+      router.push("/auth/login?registered=true")
     } catch (error: any) {
       console.error("Registration error:", error)
-      let errorMessage = "Đăng ký không thành công. Vui lòng thử lại sau."
-      
+
       // Handle Firebase specific errors
-      if (error.code === 'auth/email-already-in-use') {
-        errorMessage = "Email đã được sử dụng"
-      } else if (error.code === 'auth/invalid-email') {
-        errorMessage = "Email không hợp lệ"
-      } else if (error.code === 'auth/operation-not-allowed') {
-        errorMessage = "Đăng ký tạm thời không khả dụng"
-      } else if (error.code === 'auth/weak-password') {
-        errorMessage = "Mật khẩu không đủ mạnh"
+      if (error.code === "auth/email-already-in-use") {
+        setLocalError("Email đã được sử dụng")
+      } else if (error.code === "auth/invalid-email") {
+        setLocalError("Email không hợp lệ")
+      } else if (error.code === "auth/operation-not-allowed") {
+        setLocalError("Đăng ký tạm thời không khả dụng")
+      } else if (error.code === "auth/weak-password") {
+        setLocalError("Mật khẩu không đủ mạnh")
+      } else {
+        setLocalError("Đăng ký không thành công. Vui lòng thử lại sau.")
       }
-      
-      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -95,24 +101,18 @@ export default function RegisterPage() {
 
         {/* Right side - Form */}
         <div className="md:w-3/5 p-8">
-        <div className="flex justify-center mb-6">
-          <Link href="/" passHref>
-            <Image
-              src="/logo.png"
-              alt="360HOME Logo"
-              width={120}
-              height={40}
-              className="cursor-pointer"
-            />
-          </Link>
-        </div>
+          <div className="flex justify-center mb-6">
+            <Link href="/" passHref>
+              <Image src="/logo.png" alt="360HOME Logo" width={120} height={40} className="cursor-pointer" />
+            </Link>
+          </div>
 
           <h2 className="text-2xl font-bold text-teal-700 mb-2">ĐĂNG KÝ 360HOME</h2>
           <p className="text-gray-600 mb-6">
             360HOME cam kết bảo mật thông tin khách hàng, không sử dụng thông tin khách hàng vào mục đích khác.
           </p>
 
-          {error && <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">{error}</div>}
+          {localError && <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">{localError}</div>}
 
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
@@ -220,3 +220,4 @@ export default function RegisterPage() {
     </div>
   )
 }
+

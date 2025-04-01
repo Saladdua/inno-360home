@@ -2,51 +2,61 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Mail } from "lucide-react"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function ForgotPasswordPage() {
+  const { forgotPassword, error, clearError } = useAuth()
   const [email, setEmail] = useState("")
-  const [error, setError] = useState("")
+  const [localError, setLocalError] = useState("")
   const [success, setSuccess] = useState("")
   const [loading, setLoading] = useState(false)
 
+  // Clear errors when component mounts or unmounts
+  useEffect(() => {
+    clearError()
+    return () => clearError()
+  }, [clearError])
+
+  // Update local error when context error changes
+  useEffect(() => {
+    if (error) {
+      setLocalError(error)
+    }
+  }, [error])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError("")
+    setLocalError("")
     setSuccess("")
     setLoading(true)
 
     // Validate email
     if (!email) {
-      setError("Vui lòng nhập địa chỉ email")
+      setLocalError("Vui lòng nhập địa chỉ email")
       setLoading(false)
       return
     }
 
     try {
-      // Send password reset request
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message || "Không thể gửi email đặt lại mật khẩu")
-      }
-
+      await forgotPassword(email)
       setSuccess("Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hộp thư của bạn.")
       setEmail("")
     } catch (error: any) {
       console.error("Password reset error:", error)
-      setError(error.message || "Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại sau.")
+
+      if (error.code === "auth/invalid-email") {
+        setLocalError("Email không hợp lệ")
+      } else if (error.code === "auth/user-not-found") {
+        // For security reasons, we still show success message even if user doesn't exist
+        setSuccess("Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hộp thư của bạn.")
+        setEmail("")
+      } else {
+        setLocalError("Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại sau.")
+      }
     } finally {
       setLoading(false)
     }
@@ -69,7 +79,7 @@ export default function ForgotPasswordPage() {
           <h2 className="text-2xl font-bold text-teal-700 mb-2">QUÊN MẬT KHẨU</h2>
           <p className="text-gray-600 mb-6">Nhập địa chỉ email của bạn để nhận liên kết đặt lại mật khẩu</p>
 
-          {error && <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">{error}</div>}
+          {localError && <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">{localError}</div>}
 
           {success && <div className="bg-green-50 text-green-600 p-3 rounded-md mb-4">{success}</div>}
 
@@ -105,7 +115,7 @@ export default function ForgotPasswordPage() {
 
           <div className="mt-6 text-center">
             <p className="text-gray-600">
-              <Link href="/" passHref className="text-teal-700 hover:underline">
+              <Link href="/auth/login" passHref className="text-teal-700 hover:underline">
                 Quay lại đăng nhập
               </Link>
             </p>

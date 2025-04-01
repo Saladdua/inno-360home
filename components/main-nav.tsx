@@ -4,8 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { Menu, X } from "lucide-react"
-import { auth } from "@/lib/firebase"
-import { onAuthStateChanged, signOut } from "firebase/auth"
+import { useAuth } from "@/contexts/auth-context"
 
 interface MainNavProps {
   onLoginClick: () => void
@@ -13,23 +12,19 @@ interface MainNavProps {
 
 export default function MainNav({ onLoginClick }: MainNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [user, setUser] = useState<any>(null)
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
+  const { user, logout } = useAuth()
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user)
-      if (user) {
-        setShowSuccessMessage(true)
-        setTimeout(() => setShowSuccessMessage(false), 3000)
-      }
-    })
-    return () => unsubscribe()
-  }, [])
+    if (user) {
+      setShowSuccessMessage(true)
+      setTimeout(() => setShowSuccessMessage(false), 3000)
+    }
+  }, [user])
 
   const handleLogout = async () => {
     try {
-      await signOut(auth)
+      await logout()
     } catch (error) {
       console.error("Logout error:", error)
     }
@@ -172,3 +167,4 @@ export default function MainNav({ onLoginClick }: MainNavProps) {
     </nav>
   )
 }
+
