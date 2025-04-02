@@ -2,8 +2,10 @@ import NextAuth, { DefaultSession, AuthOptions } from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
-import { compare } from "bcrypt"
+import { compare } from "bcryptjs"
 import { db } from "@/lib/db"
+import { type NextRequest, NextResponse } from "next/server"
+import { getServerSession } from "next-auth/next"
 
 // Extend the built-in session type
 declare module "next-auth" {

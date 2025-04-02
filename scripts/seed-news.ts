@@ -22,7 +22,7 @@ const newsData = [
     description:
       "360Home cung cấp các thiết kế chuyên nghiệp hoàn toàn miễn phí kèm theo báo giá chi tiết dịch vụ nội thất trọn gói của mình cho khách tất cả khách hàng. Trước bối cảnh chính sách nhà nước phê duyệt chiến lược phát triển ngành xây dựng đến",
     image: "/services/news1.png",
-    date: Timestamp.fromDate(new Date("2025-02-12")),
+    date: new Timestamp(Math.floor(new Date("2025-02-12").getTime() / 1000), 0),
     icon: "/logo.png",
     link: "https://360home.vn/360home-giai-phap-thong-minh-va-toan-dien-cho-thiet-ke-noi-that/",
     featured: true,
@@ -33,7 +33,7 @@ const newsData = [
     description:
       "Mặc dù điều kiện thời tiết tại Hà Nội trong tháng vừa qua không được thuận lợi, dự án Lumi Hanoi vẫn đảm bảo tiến độ xây dựng được diễn ra theo kế hoạch và đạt được những cột mốc quan trọng.",
     image: "/services/news2.jpg",
-    date: Timestamp.fromDate(new Date("2025-03-12")),
+    date: new Timestamp(Math.floor(new Date("2025-03-12").getTime() / 1000), 0),
     icon: "/logo.png",
     link: "https://360home.vn/cap-nhat-tien-do-du-an-lumi-capitaland-ha-noi/",
     featured: true,
@@ -44,7 +44,7 @@ const newsData = [
     description:
       "Bỏ qua tone màu trung tính, các không gian sống đa dạng màu sắc, có góc sáng tạo tại nhà… sẽ được ưa chuộng nhiều hơn trong năm mới.",
     image: "/services/news3.png",
-    date: Timestamp.fromDate(new Date("2025-01-22")),
+    date: new Timestamp(Math.floor(new Date("2025-01-22").getTime() / 1000), 0),
     icon: "/logo.png",
     link: "https://360home.vn/cac-xu-huong-trang-tri-noi-that-thinh-hanh-nam-2025/",
     featured: true,

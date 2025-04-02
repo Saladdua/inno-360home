@@ -7,7 +7,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Mail, Eye, EyeOff } from "lucide-react"
-import { signIn } from "next-auth/react"
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
 import { auth } from "@/lib/firebase"
 
@@ -56,18 +55,32 @@ export default function LoginPage() {
     }
 
     try {
+      console.log("Signing in with Firebase...")
       // Sign in with Firebase
-      await signInWithEmailAndPassword(auth, formData.email, formData.password)
+      const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password)
+      console.log("Firebase sign-in successful", userCredential.user.uid)
 
-      // Sign in with NextAuth
-      const result = await signIn("credentials", {
-        redirect: false,
-        email: formData.email,
-        password: formData.password,
-      })
+      // Sync user with MySQL if needed
+      try {
+        console.log("Syncing user with MySQL...")
+        const syncResponse = await fetch("/api/auth/sync-user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            firebaseUid: userCredential.user.uid,
+          }),
+        })
 
-      if (result?.error) {
-        throw new Error(result.error)
+        if (syncResponse.ok) {
+          console.log("User sync successful")
+        } else {
+          console.error("User sync failed:", await syncResponse.text())
+        }
+      } catch (syncError) {
+        console.error("Error syncing user:", syncError)
       }
 
       // Redirect to home page
@@ -88,8 +101,26 @@ export default function LoginPage() {
 
     try {
       const provider = new GoogleAuthProvider()
-      await signInWithPopup(auth, provider)
-      await signIn("google", { callbackUrl: "/" })
+      const result = await signInWithPopup(auth, provider)
+
+      // Sync Google user with MySQL
+      if (result.user) {
+        await fetch("/api/auth/sync-user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: result.user.email,
+            name: result.user.displayName,
+            provider: "google",
+            firebaseUid: result.user.uid,
+          }),
+        })
+      }
+
+      router.push("/")
+      router.refresh()
     } catch (error: any) {
       console.error("Google sign-in error:", error)
       setError("Đăng nhập với Google không thành công. Vui lòng thử lại sau.")
@@ -107,17 +138,11 @@ export default function LoginPage() {
 
         {/* Right side - Form */}
         <div className="md:w-3/5 p-8">
-        <div className="flex justify-center mb-6">
-          <Link href="/" passHref>
-            <Image
-              src="/logo.png"
-              alt="360HOME Logo"
-              width={120}
-              height={40}
-              className="cursor-pointer"
-            />
-          </Link>
-        </div>
+          <div className="flex justify-center mb-6">
+            <Link href="/" passHref>
+              <Image src="/logo.png" alt="360HOME Logo" width={120} height={40} className="cursor-pointer" />
+            </Link>
+          </div>
 
           <h2 className="text-2xl font-bold text-teal-700 mb-2">ĐĂNG NHẬP 360HOME</h2>
           <p className="text-gray-600 mb-6">Đăng nhập để trải nghiệm đầy đủ các tính năng của 360HOME</p>
@@ -235,3 +260,4 @@ export default function LoginPage() {
     </div>
   )
 }
+
