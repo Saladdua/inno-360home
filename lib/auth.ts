@@ -1,5 +1,5 @@
 import { db } from "@/lib/db"
-import { compare, hash } from "bcrypt"
+import { compare, hash } from "bcryptjs"
 import { cookies } from "next/headers"
 import { v4 as uuidv4 } from "uuid"
 import type { User } from "@prisma/client"
@@ -154,6 +154,20 @@ export async function resetPassword(email: string): Promise<boolean> {
   } catch (error) {
     console.error("Reset password error:", error)
     return false
+  }
+}
+
+export async function updateUserProfile(userId: number, data: Partial<User>): Promise<SafeUser | null> {
+  try {
+    const user = await db.user.update({
+      where: { id: userId },
+      data,
+    })
+    const { password: _, ...safeUser } = user
+    return safeUser
+  } catch (error) {
+    console.error("Profile update error:", error)
+    return null
   }
 }
 

@@ -1,8 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/firebase"
-import { signInWithEmailAndPassword } from "firebase/auth"
-import { db } from "@/lib/db"
-import { createToken } from "@/lib/token"
+import { validateCredentials, createSession } from "@/lib/auth"
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,42 +10,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Vui lòng điền đầy đủ thông tin" }, { status: 400 })
     }
 
-    // Sign in with Firebase
-    const userCredential = await signInWithEmailAndPassword(auth, email, password)
-    const firebaseUser = userCredential.user
-
-    // Find or create user in database
-    let user = await db.user.findUnique({
-      where: { firebaseUid: firebaseUser.uid }
-    })
+    // Validate credentials
+    const user = await validateCredentials(email, password)
 
     if (!user) {
-      user = await db.user.create({
-        data: {
-          email: firebaseUser.email!,
-          name: firebaseUser.displayName || '',
-          firebaseUid: firebaseUser.uid,
-          password: '',
-        }
-      })
+      return NextResponse.json({ message: "Email hoặc mật khẩu không đúng" }, { status: 401 })
     }
-
-    // Create token
-    await createToken(user.id.toString(), firebaseUser.uid)
+    // Create session
+    await createSession(user.id.toString())
 
     return NextResponse.json({
-      message: "Đăng nhập thành công",
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name
-      }
+      message: "Đăng nhập thành công", 
+      user,
     })
   } catch (error: any) {
     console.error("Login error:", error)
-    if (error.code === 'auth/invalid-credential') {
-      return NextResponse.json({ message: "Email hoặc mật khẩu không đúng" }, { status: 401 })
-    }
     return NextResponse.json({ message: "Đăng nhập không thành công. Vui lòng thử lại sau." }, { status: 500 })
   }
 }
