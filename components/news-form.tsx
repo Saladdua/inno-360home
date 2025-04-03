@@ -51,7 +51,7 @@ export default function NewsForm({ initialData, isEditing = false }: NewsFormPro
     }
 
     // Add your admin check logic here
-    const isAdmin = user?.email === "admin@example.com" // Replace with your admin check
+    const isAdmin = user?.email === "minhnghia14603@gmail.com" // Replace with your admin check
 
     if (!isAdmin) {
       router.push("/")

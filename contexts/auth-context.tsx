@@ -1,7 +1,13 @@
-"use client"
+"use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
-import { useRouter } from "next/navigation"
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
+import { useRouter } from "next/navigation";
 import {
   type User,
   createUserWithEmailAndPassword,
@@ -9,122 +15,142 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   signOut,
+  signOut as firebaseSignOut,
   onAuthStateChanged,
   sendPasswordResetEmail,
   updateProfile,
   type UserCredential,
-} from "firebase/auth"
-import { auth } from "@/lib/firebase-config"
+} from "firebase/auth";
+import { auth } from "@/lib/firebase-config";
+import {
+  getUserProfile,
+  createOrUpdateUserProfile,
+  UserRole,
+  type UserProfile,
+} from "@/lib/user-service";
+import { createOrUpdateUserProfileMySQL } from "@/lib/mysql-user-service";
 
 interface AuthContextType {
-  user: User | null
-  loading: boolean
-  error: string | null
-  login: (email: string, password: string) => Promise<UserCredential>
-  register: (name: string, email: string, password: string) => Promise<UserCredential>
-  logout: () => Promise<void>
-  googleSignIn: () => Promise<UserCredential>
-  forgotPassword: (email: string) => Promise<void>
-  clearError: () => void
+  user: User | null;
+  userProfile: UserProfile | null;
+  loading: boolean;
+  error: string | null;
+  login: (email: string, password: string) => Promise<UserCredential>;
+  register: (
+    name: string,
+    email: string,
+    password: string
+  ) => Promise<UserCredential>;
+  logout: () => Promise<void>;
+  googleSignIn: () => Promise<UserCredential>;
+  forgotPassword: (email: string) => Promise<void>;
+  clearError: () => void;
+  isAdmin: boolean;
+  isEditor: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
+  const [user, setUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser)
-      setLoading(false)
-    })
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setUser(user);
+      setLoading(false);
+    });
 
-    return () => unsubscribe()
-  }, [])
+    return () => unsubscribe();
+  }, []);
 
   const login = async (email: string, password: string) => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password)
-      setError(null)
-      return result
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      setError(null);
+      return result;
     } catch (err: any) {
-      setError(err.message)
-      throw err
+      setError(err.message);
+      throw err;
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const register = async (name: string, email: string, password: string) => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const result = await createUserWithEmailAndPassword(auth, email, password)
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
       // Update profile with name
       if (result.user) {
         await updateProfile(result.user, {
           displayName: name,
-        })
+        });
       }
 
-      setError(null)
-      return result
+      setError(null);
+      return result;
     } catch (err: any) {
-      setError(err.message)
-      throw err
+      setError(err.message);
+      throw err;
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const logout = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      await signOut(auth)
-      setError(null)
+      await signOut(auth);
+      setError(null);
     } catch (err: any) {
-      setError(err.message)
-      throw err
+      setError(err.message);
+      throw err;
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const googleSignIn = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const provider = new GoogleAuthProvider()
-      const result = await signInWithPopup(auth, provider)
-      setError(null)
-      return result
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      setError(null);
+      return result;
     } catch (err: any) {
-      setError(err.message)
-      throw err
+      setError(err.message);
+      throw err;
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const forgotPassword = async (email: string) => {
-    setLoading(true)
+    setLoading(true);
     try {
-      await sendPasswordResetEmail(auth, email)
-      setError(null)
+      await sendPasswordResetEmail(auth, email);
+      setError(null);
     } catch (err: any) {
-      setError(err.message)
-      throw err
+      setError(err.message);
+      throw err;
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const clearError = () => {
-    setError(null)
-  }
+    setError(null);
+  };
 
   return (
     <AuthContext.Provider
@@ -142,14 +168,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     >
       {children}
     </AuthContext.Provider>
-  )
+  );
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider")
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-  return context
+  return context;
 }
-

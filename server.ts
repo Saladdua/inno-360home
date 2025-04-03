@@ -24,29 +24,37 @@ app.use("/api/auth", authRouter);
 app.post("/send-email", async (req, res) => {
     const { name, email, phone, subject, message } = req.body;
 
-  // Create transporter
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
-  });
+    console.log("Received email request:", { name, email, phone, subject });
+
+    // Create transporter
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    });
 
     // Email content
     const mailOptions = {
         from: process.env.EMAIL_USER,
-        to: process.env.RECEIVER_EMAIL, // Your email to receive messages
+        to: process.env.RECEIVER_EMAIL,
         subject: `[360Home] Liên Hệ Tư Vấn: ${subject}`,
         text: `Họ và tên: ${name}\nEmail: ${email}\nSố điện thoại: ${phone}\nNội dung:\n${message}`,
     };
 
     try {
+        console.log("Attempting to send email...");
         await transporter.sendMail(mailOptions);
+        console.log("Email sent successfully!");
         res.status(200).json({ success: true, message: "Email sent successfully!" });
     } catch (error) {
         console.error("Email sending error:", error);
-        res.status(500).json({ success: false, message: "Failed to send email." });
+        res.status(500).json({ 
+            success: false, 
+            message: "Failed to send email.",
+            error: error instanceof Error ? error.message : "Unknown error"
+        });
     }
 });
 

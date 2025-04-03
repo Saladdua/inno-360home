@@ -15,7 +15,7 @@ export default function NewsAdminPage() {
   const router = useRouter()
 
   // Check if user is admin (you'll need to implement this logic)
-  const isAdmin = user?.email === "admin@example.com" // Replace with your admin check
+  const isAdmin = user?.email === "minhnghia14603@gmail.com" // Replace with your admin check
 
   useEffect(() => {
     // Redirect if not logged in or not admin

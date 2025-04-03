@@ -1,43 +1,46 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { getToken } from "@/lib/token"
+import { auth } from "@/lib/firebase-admin"
 
-// Add paths that require authentication
-const protectedPaths = [
-  "/profile",
-  "/dashboard",
-  "/settings"
-]
-
+// This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname
+  const session = request.cookies.get("session")?.value || ""
 
-  // Check if the path requires authentication
-  if (protectedPaths.some(protectedPath => path.startsWith(protectedPath))) {
-    const token = await getToken()
-
-    if (!token) {
-      // Redirect to login page if no token is found
-      const loginUrl = new URL("/auth/login", request.url)
-      loginUrl.searchParams.set("callbackUrl", path)
-      return NextResponse.redirect(loginUrl)
+  // Verify the session cookie
+  try {
+    if (!session) {
+      return redirectToLogin(request)
     }
-  }
 
-  return NextResponse.next()
+    const decodedClaims = await auth.verifySessionCookie(session)
+
+    // Check if the route requires admin access
+    if (request.nextUrl.pathname.startsWith("/admin")) {
+      // Get custom claims to check if user is admin
+      const userRecord = await auth.getUser(decodedClaims.uid)
+      const customClaims = userRecord.customClaims || {}
+
+      if (!customClaims.admin) {
+        // Redirect to home page if not admin
+        return NextResponse.redirect(new URL("/", request.url))
+      }
+    }
+
+    return NextResponse.next()
+  } catch (error) {
+    return redirectToLogin(request)
+  }
 }
 
+function redirectToLogin(request: NextRequest) {
+  const url = request.nextUrl.clone()
+  url.pathname = "/auth/login"
+  url.searchParams.set("redirectTo", request.nextUrl.pathname)
+  return NextResponse.redirect(url)
+}
+
+// See "Matching Paths" below to learn more
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico|public).*)",
-  ],
+  matcher: ["/admin/:path*"],
 }
 
