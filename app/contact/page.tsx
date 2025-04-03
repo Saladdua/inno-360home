@@ -43,16 +43,22 @@ export default function ContactPage() {
     event.preventDefault();
 
     try {
+      console.log("Submitting form data:", formData);
+      
       const response = await fetch("http://localhost:5000/send-email", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
         body: JSON.stringify(formData),
       });
 
       const result = await response.json();
+      console.log("Server response:", result);
       
       if (result.success) {
-        console.log("Form submitted:", formData);
+        console.log("Form submitted successfully:", formData);
         alert("Cảm ơn bạn đã liên hệ với chúng tôi. Chúng tôi sẽ phản hồi trong thời gian sớm nhất!");
         // Reset form after successful submission
         setFormData({
@@ -63,7 +69,8 @@ export default function ContactPage() {
           message: ""
         });
       } else {
-        alert("Gửi tin nhắn thất bại!");
+        console.error("Server returned error:", result);
+        alert(`Gửi tin nhắn thất bại: ${result.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
