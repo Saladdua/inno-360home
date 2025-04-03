@@ -4,13 +4,12 @@ import { signInWithEmailAndPassword } from "firebase/auth"
 import { db } from "@/lib/db"
 import { createToken } from "@/lib/token"
 
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await req.json()
+    const { email, password } = await request.json()
 
-    // Validate input
     if (!email || !password) {
-      return NextResponse.json({ message: "Vui lòng điền đầy đủ thông tin" }, { status: 400 })
+      return NextResponse.json({ error: "Email and password are required" }, { status: 400 })
     }
 
     // Sign in with Firebase
