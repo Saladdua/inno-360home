@@ -35,34 +35,32 @@ app.post("/send-email", async (req, res) => {
             RECEIVER_EMAIL: process.env.RECEIVER_EMAIL ? "Set" : "Not set"
         });
 
-        // Create transporter
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.EMAIL_SERVER_USER,
-                pass: process.env.EMAIL_SERVER_PASSWORD
-            }
-        });
+    console.log("Received email request:", { name, email, phone, subject });
 
-        // Email content
-        const mailOptions = {
-            from: process.env.EMAIL_FROM,
-            to: process.env.RECEIVER_EMAIL,
-            subject: `[360Home] Liên Hệ Tư Vấn: ${subject}`,
-            text: `Họ và tên: ${name}\nEmail: ${email}\nSố điện thoại: ${phone}\nNội dung:\n${message}`,
-        };
+    // Create transporter
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    });
 
-        console.log("Attempting to send email with options:", {
-            from: mailOptions.from,
-            to: mailOptions.to,
-            subject: mailOptions.subject
-        });
+    // Email content
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.RECEIVER_EMAIL,
+        subject: `[360Home] Liên Hệ Tư Vấn: ${subject}`,
+        text: `Họ và tên: ${name}\nEmail: ${email}\nSố điện thoại: ${phone}\nNội dung:\n${message}`,
+    };
 
+    try {
+        console.log("Attempting to send email...");
         await transporter.sendMail(mailOptions);
         console.log("Email sent successfully!");
         res.status(200).json({ success: true, message: "Email sent successfully!" });
     } catch (error) {
-        console.error("Detailed email sending error:", error);
+        console.error("Email sending error:", error);
         res.status(500).json({ 
             success: false, 
             message: "Failed to send email.",

@@ -12,10 +12,12 @@ datasource db {
 
 model User {
   id          Int                  @id @default(autoincrement())
+  uid         String               @unique
   name        String
   email       String               @unique
   password    String?
   firebaseUid String?              @unique
+  role        String               @default("user") // "user", "editor", "admin"
   createdAt   DateTime             @default(now())
   updatedAt   DateTime             @updatedAt
   accounts    Account[]
@@ -25,14 +27,19 @@ model User {
 }
 
 model News {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
-  description String   @db.Text
+  description String    @db.Text
+  content     String?   @db.Text
   image       String
-  date        String
-  link        String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  date        DateTime
+  icon        String?
+  link        String?
+  author      String?
+  category    String?
+  featured    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Account {
