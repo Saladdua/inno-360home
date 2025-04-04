@@ -152,10 +152,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError(null);
   };
 
+  // Check if user is admin
+  const isAdmin = userProfile?.role === UserRole.ADMIN;
+
+  // Check if user is editor (or admin, since admins can do everything editors can)
+  const isEditor = userProfile?.role === UserRole.EDITOR || isAdmin;
+
   return (
     <AuthContext.Provider
       value={{
         user,
+        userProfile,
         loading,
         error,
         login,
@@ -164,6 +171,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         googleSignIn,
         forgotPassword,
         clearError,
+        isAdmin,
+        isEditor,
       }}
     >
       {children}

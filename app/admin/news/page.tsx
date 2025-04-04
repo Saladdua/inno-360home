@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
-import type { NewsItem } from "@/lib/news-service";
+import type { NewsItem } from "@/lib/news-service-combined";
 import { formatDate } from "@/lib/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2, Edit, Plus } from "lucide-react";
+import SyncDatabasesButton from "@/components/sync-databases-button";
 
 export default function NewsAdminPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -16,7 +16,7 @@ export default function NewsAdminPage() {
   const router = useRouter();
 
   // Check if user is admin (you'll need to implement this logic)
-  const isAdmin = user?.email === "minhnghia14603@gmail.com"; // Replace with your admin check
+  const isAdmin = user?.email === "admin@example.com"; // Replace with your admin check
 
   useEffect(() => {
     // Redirect if not logged in or not admin
@@ -90,13 +90,16 @@ export default function NewsAdminPage() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">News Management</h1>
-        <button
-          onClick={() => router.push("/admin/news/create")}
-          className="bg-teal-700 text-white px-4 py-2 rounded-md flex items-center"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add News
-        </button>
+        <div className="flex gap-4">
+          <SyncDatabasesButton />
+          <button
+            onClick={() => router.push("/admin/news/create")}
+            className="bg-teal-700 text-white px-4 py-2 rounded-md flex items-center"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add News
+          </button>
+        </div>
       </div>
 
       {error && (

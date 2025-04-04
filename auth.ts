@@ -13,14 +13,15 @@ router.post("/register", (async (req, res) => {
 
   // Check if user exists
   const existingUser = await prisma.user.findUnique({ where: { email } });
-  if (existingUser) return res.status(400).json({ error: "User already exists" });
+  if (existingUser)
+    return res.status(400).json({ error: "User already exists" });
 
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // Create user
   const user = await prisma.user.create({
-    data: { email, password: hashedPassword, name },
+    data: { uid: crypto.randomUUID(), email, password: hashedPassword, name },
   });
 
   res.json({ message: "User registered successfully" });
@@ -31,10 +32,12 @@ router.post("/login", (async (req, res) => {
   const { email, password } = req.body;
 
   const user = await prisma.user.findUnique({ where: { email } });
-  if (!user || !user.password) return res.status(401).json({ error: "Invalid credentials" });
+  if (!user || !user.password)
+    return res.status(401).json({ error: "Invalid credentials" });
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
-  if (!isPasswordValid) return res.status(401).json({ error: "Invalid credentials" });
+  if (!isPasswordValid)
+    return res.status(401).json({ error: "Invalid credentials" });
 
   // Generate JWT
   const token = jwt.sign({ userId: user.id }, SECRET_KEY, { expiresIn: "1h" });
@@ -49,7 +52,9 @@ router.get("/me", (async (req, res) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY) as { userId: number };
-    const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+    });
     res.json({ email: user?.email });
   } catch {
     res.status(401).json({ error: "Invalid token" });

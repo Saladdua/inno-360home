@@ -1,53 +1,46 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { getAllNews, createNews, getFeaturedNews } from "@/lib/news-service"
+import { type NextRequest, NextResponse } from "next/server";
+import { getAllNews, createNews } from "@/lib/news-service-combined";
+import { getCurrentUser } from "@/lib/auth";
 
-// GET /api/news - Get all news or featured news
+// GET /api/news - Get all news items
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const featured = searchParams.get("featured") === "true"
-    const count = searchParams.get("count") ? Number.parseInt(searchParams.get("count")!) : undefined
-
-    const news = featured ? await getFeaturedNews(count) : await getAllNews()
-
-    return NextResponse.json(news)
+    const news = await getAllNews();
+    return NextResponse.json(news);
   } catch (error) {
-    console.error("Error fetching news:", error)
-    return NextResponse.json({ error: "Failed to fetch news" }, { status: 500 })
+    console.error("Error fetching news:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch news" },
+      { status: 500 }
+    );
   }
 }
 
 // POST /api/news - Create a new news item (protected)
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get("authorization")
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    // Check authentication
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // This is a simplified auth check - in production, you'd verify the token
-    // with Firebase Admin SDK
+    const data = await request.json();
 
-    const data = await request.json()
-
-    // Validate required fields
-    if (!data.title || !data.description || !data.image) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
-    }
-
-    // Ensure date is a Date object
+    // Ensure date is a Date object if provided
     if (data.date) {
-      data.date = new Date(data.date)
-    } else {
-      data.date = new Date()
+      data.date = new Date(data.date);
     }
 
-    const id = await createNews(data)
+    const id = await createNews(data);
 
-    return NextResponse.json({ id, ...data }, { status: 201 })
+    return NextResponse.json({ id, ...data }, { status: 201 });
   } catch (error) {
-    console.error("Error creating news:", error)
-    return NextResponse.json({ error: "Failed to create news" }, { status: 500 })
+    console.error("Error creating news:", error);
+    return NextResponse.json(
+      { error: "Failed to create news" },
+      { status: 500 }
+    );
   }
 }
-
