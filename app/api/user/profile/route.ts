@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
-import { hash, compare } from "bcrypt"
+import { hash, compare } from "bcryptjs"
 import { db } from "@/lib/db"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 

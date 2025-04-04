@@ -67,7 +67,40 @@ export default function RegisterPage() {
     }
 
     try {
-      await register(formData.username, formData.email, formData.password)
+      // Register with Firebase
+      const userCredential = await register(formData.username, formData.email, formData.password)
+
+      if (!userCredential || !userCredential.user) {
+        throw new Error("Registration failed")
+      }
+
+      // Also save to MySQL database
+      try {
+        console.log("Syncing user to MySQL...")
+        const response = await fetch("/api/auth/sync-user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: formData.username,
+            email: formData.email,
+            password: formData.password,
+            firebaseUid: userCredential.user.uid,
+          }),
+        })
+
+        if (!response.ok) {
+          const data = await response.json()
+          console.error("MySQL sync error:", data)
+          // We don't throw here because Firebase registration succeeded
+        } else {
+          console.log("User synced to MySQL successfully")
+        }
+      } catch (mysqlError) {
+        console.error("MySQL sync error:", mysqlError)
+        // We don't throw here because Firebase registration succeeded
+      }
 
       // Redirect to login page with success message
       router.push("/auth/login?registered=true")
@@ -84,7 +117,7 @@ export default function RegisterPage() {
       } else if (error.code === "auth/weak-password") {
         setLocalError("Mật khẩu không đủ mạnh")
       } else {
-        setLocalError("Đăng ký không thành công. Vui lòng thử lại sau.")
+        setLocalError(error.message || "Đăng ký không thành công. Vui lòng thử lại sau.")
       }
     } finally {
       setLoading(false)
@@ -210,7 +243,7 @@ export default function RegisterPage() {
           <div className="mt-6 text-center">
             <p className="text-gray-600">
               Đã có tài khoản?{" "}
-              <Link href="/" passHref className="text-teal-700 hover:underline">
+              <Link href="/auth/login" passHref className="text-teal-700 hover:underline">
                 Đăng nhập
               </Link>
             </p>
