@@ -12,12 +12,6 @@
     "setup-db": "ts-node scripts/setup-db.ts",
     "seed-news": "ts-node scripts/seed-news.ts",
     "testFirestore": "ts-node scripts/testFirestore.ts"
-    "lint": "next lint",
-    "init-db": "ts-node scripts/init-db.ts",
-    "create-db": "ts-node scripts/create-db.ts",
-    "setup-db": "ts-node scripts/setup-db.ts",
-    "seed-news": "ts-node scripts/seed-news.ts",
-    "testFirestore": "ts-node scripts/testFirestore.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.8.0",
